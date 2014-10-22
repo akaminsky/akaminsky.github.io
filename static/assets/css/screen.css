@@ -660,7 +660,7 @@ margin on the iframe, cause it breaks stuff. */
 }
 
 /* The details of your blog. Defined in ghost/settings/ */
-.page-title {
+.page-title, .vertical .post-title {
     margin: 10px 0 10px 0;
     font-size: 5rem;
     letter-spacing: -1px;
@@ -670,7 +670,7 @@ margin on the iframe, cause it breaks stuff. */
     text-shadow: 0px 1px 3px rgba(50, 50, 50, 1);
 }
 
-.page-description {
+.page-description, .vertical .post-date {
     margin: 0;
     font-size: 2rem;
     line-height: 1.5em;
@@ -1060,8 +1060,10 @@ body:not(.post-template) .post-title {
    ========================================================================== */
 
 .post-head.main-header {
-    height: 65%;
+    height: 75%;
     min-height: 180px;
+    background-attachment: fixed;
+    background-position:bottom;
 }
 
 .no-cover.post-head.main-header {
@@ -1436,6 +1438,8 @@ body:not(.post-template) .post-title {
 
     .post-head.main-header {
         height:45%;
+        background-attachment: scroll;
+        background-position: center;
     }
 
     .tag-head.main-header,
