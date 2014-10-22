@@ -479,6 +479,7 @@ margin on the iframe, cause it breaks stuff. */
     background: #222 no-repeat center center;
     background-size: cover;
     overflow: hidden;
+    background-attachment: fixed;
 }
 
 .main-header .inner {
@@ -1355,6 +1356,7 @@ body:not(.post-template) .post-title {
         min-height: 240px;
         height: 60%;
         padding: 15% 0;
+        background-attachment: scroll;
     }
 
     .scroll-down,
