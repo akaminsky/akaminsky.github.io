@@ -238,7 +238,7 @@ a {
 }
 
 a:hover {
-    color: #111;
+    color: #000;
 }
 
 p, ul, ol, dl {
@@ -702,14 +702,16 @@ margin on the iframe, cause it breaks stuff. */
     border-color: rgba(0,0,0,0.3);
 }
 
-/* Add subtle load-in animation for content on the home page */
-.home-template .page-title {
+/* Add subtle load-in animation for content on the home page and post titles */
+.home-template .page-title,
+.post-template .post-title {
     -webkit-animation: fade-in-down 0.6s;
     animation: fade-in-down 0.6s;
     -webkit-animation-delay: 0.2s;
     animation-delay: 0.2s;
 }
-.home-template .page-description {
+.home-template .page-description, 
+.post-template .post-date {
     -webkit-animation: fade-in-down 0.9s;
     animation: fade-in-down 0.9s;
     -webkit-animation-delay: 0.1s;
@@ -723,7 +725,7 @@ margin on the iframe, cause it breaks stuff. */
     max-width: 710px;
     margin: 4rem auto;
     padding-bottom: 4rem;
-    border-bottom: #EBF2F6 1px solid;
+    border-bottom: #E6E6E6 1px solid;
     word-break: break-word;
     hyphens: auto;
 }
@@ -751,6 +753,11 @@ body:not(.post-template) .post-title {
     font-size: 3.6rem;
 }
 
+.post-title {
+    margin: 0;
+    margin-bottom: .2em;
+}
+
 .post-title a {
     text-decoration: none;
 }
@@ -771,7 +778,7 @@ body:not(.post-template) .post-title {
 .post-meta {
     display: block;
     margin: 1.75rem 0 0 0;
-    font-family: "Open Sans", sans-serif;
+    font-family: "Merriweather", serif;
     font-size: 1.5rem;
     line-height: 2.2rem;
     color: #9EABB3;
@@ -802,12 +809,11 @@ body:not(.post-template) .post-title {
 
 .post-date {
     display: inline-block;
-    margin-left: 8px;
-    padding-left: 12px;
-    border-left: #d5dbde 1px solid;
-    text-transform: uppercase;
-    font-size: 1.3rem;
+    text-transform: none;
+    margin-bottom: 1em;
+    font-size: 1.5rem;
     white-space: nowrap;
+    color: #9EABB3;
 }
 
 .user-image {
@@ -857,7 +863,7 @@ body:not(.post-template) .post-title {
 }
 
 .post-template .post-title {
-    margin-bottom: 0;
+    margin-bottom: .2em;
 }
 
 .post-template .post-meta {
@@ -908,9 +914,9 @@ body:not(.post-template) .post-title {
 /* The author credit area after the post */
 .post-footer {
     position: relative;
-    margin: 6rem 0 0 0;
-    padding: 6rem 0 0 0;
-    border-top: #EBF2F6 1px solid;
+    margin: 5rem 0;
+    padding: 2rem 0 0 0;
+    border-top: #E6E6E6 1px solid;
 }
 
 .post-footer h4 {
@@ -922,6 +928,19 @@ body:not(.post-template) .post-title {
     margin: 1rem 0;
     font-size: 1.4rem;
     line-height: 1.75em;
+}
+
+.post-footer .prev-next a {
+    font-size: .8em;
+    text-decoration: none;
+    border-bottom: 1px solid #3A4145;
+    display: inline;
+}
+.post-footer .prev-next .prev-post {
+    float: left;
+}
+.post-footer .prev-next .next-post {
+    float: right;
 }
 
 /* list of author links - location / url */
@@ -942,43 +961,6 @@ body:not(.post-template) .post-title {
     color: #111;
 }
 
-/* Create some space to the right for the share links */
-.post-footer .author {
-    margin-right: 180px;
-}
-
-.post-footer h4 a {
-    color: #2e2e2e;
-    text-decoration: none;
-}
-
-.post-footer h4 a:hover {
-    text-decoration: underline;
-}
-
-/* Drop the share links in the space to the right.
-   Doing it like this means it's easier for the author bio
-   to be flexible at smaller screen sizes while the share
-   links remain at a fixed width the whole time */
-.post-footer .share {
-    position: absolute;
-    top: 6rem;
-    right: 0;
-    width: 140px;
-}
-
-.post-footer .share a {
-    font-size: 1.8rem;
-    display: inline-block;
-    margin: 1rem 1.6rem 1.6rem 0;
-    color: #BBC7CC;
-    text-decoration: none;
-}
-
-.post-footer .share a:hover {
-    color: #50585D;
-}
-
 /* The subscribe icon on the footer */
 .subscribe {
     width: 28px;
@@ -987,7 +969,7 @@ body:not(.post-template) .post-title {
     top: -14px;
     left: 50%;
     margin-left: -15px;
-    border: #EBF2F6 1px solid;
+    border: #E6E6E6 1px solid;
     text-align: center;
     line-height: 2.4rem;
     border-radius: 50px;
@@ -1092,7 +1074,7 @@ body:not(.post-template) .post-title {
 
 .author-profile {
     padding: 0 15px 5rem 15px;
-    border-bottom: #EBF2F6 1px solid;
+    border-bottom: #E6E6E6 1px solid;
     text-align: center;
 }
 
@@ -1262,7 +1244,7 @@ body:not(.post-template) .post-title {
 
 .extra-pagination {
     display: none;
-    border-bottom: #EBF2F6 1px solid;
+    border-bottom: #E6E6E6 1px solid;
 }
 .extra-pagination:after {
     display: block;
@@ -1302,35 +1284,32 @@ body:not(.post-template) .post-title {
 .site-footer {
     position: relative;
     margin: 8rem 0 0 0;
-    padding: 0.5rem 15px;
-    border-top: #EBF2F6 1px solid;
+    padding: 1rem;
+    border-top: #E6E6E6 1px solid;
     font-family: "Open Sans", sans-serif;
-    font-size: 1rem;
-    line-height: 1.75em;
+    font-size: 1.1rem;
+    line-height: 2em;
     color: #BBC7CC;
+    text-align: center;
 }
 
 .site-footer a {
     color: #BBC7CC;
     text-decoration: none;
-    font-weight: bold;
+    border-bottom: 1px solid #BBC7CC;
 }
 
 .site-footer a:hover {
     color: #50585D;
+    border-bottom: 1px solid #50585D;
 }
 
 .poweredby {
     display: block;
-    width: 45%;
-    float: right;
-    text-align: right;
 }
 
 .copyright {
     display: block;
-    width: 45%;
-    float: left;
 }
 
 
@@ -1371,12 +1350,12 @@ body:not(.post-template) .post-title {
         padding: 4px 0;
     }
 
-    .page-title {
+    .page-title, .vertical .post-title {
         font-size: 4rem;
         letter-spacing: -1px;
     }
 
-    .page-description {
+    .page-description, .vertical .post-date {
         font-size: 1.8rem;
         line-height: 1.5em;
     }
@@ -1439,7 +1418,7 @@ body:not(.post-template) .post-title {
     }
 
     .post-head.main-header {
-        height:45%;
+        height: 60%;
         background-attachment: scroll;
         background-position: center;
     }
@@ -1579,7 +1558,7 @@ body:not(.post-template) .post-title {
         margin: 0 0 2.5rem 0;
     }
 
-    .page-title {
+    .page-title, .vertical .post-title {
         font-size: 3rem;
     }
 
@@ -1587,7 +1566,7 @@ body:not(.post-template) .post-title {
         font-size: 0.85em;
     }
 
-    .page-description {
+    .page-description, .vertical .post-date {
         font-size: 1.6rem;
     }
 
@@ -1660,7 +1639,7 @@ body:not(.post-template) .post-title {
     .post-footer .author {
         margin: 0 0 2rem 0;
         padding: 0 0 1.6rem 0;
-        border-bottom: #EBF2F6 1px dashed;
+        border-bottom: #E6E6E6 1px dashed;
     }
 
     .post-footer .share {
@@ -1701,7 +1680,7 @@ body:not(.post-template) .post-title {
     }
 
     .post-head.main-header {
-        height: 30%;
+        height: 40%;
     }
 
     .tag-head.main-header,
