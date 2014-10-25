@@ -234,11 +234,15 @@ h6 {
 
 a {
     color: #4A4A4A;
-    transition: color ease 0.3s;
+    transition: color ease 0.1s;
+    text-decoration: none;
+    border-bottom: 1px solid #4A4A4A;
 }
 
 a:hover {
-    color: #000;
+    color: #2CA7B8;
+    border-bottom: 1px solid #2CA7B8;
+
 }
 
 p, ul, ol, dl {
@@ -737,7 +741,7 @@ margin on the iframe, cause it breaks stuff. */
     content: "";
     width: 7px;
     height: 7px;
-    border: #E7EEF2 1px solid;
+    border: #E6E6E6 1px solid;
     position: absolute;
     bottom: -5px;
     left: 50%;
@@ -760,6 +764,7 @@ body:not(.post-template) .post-title {
 
 .post-title a {
     text-decoration: none;
+    border-bottom: 0;
 }
 
 .post-excerpt p {
@@ -936,6 +941,9 @@ body:not(.post-template) .post-title {
     border-bottom: 1px solid #3A4145;
     display: inline;
 }
+.post-footer .prev-next a:hover {
+    border-bottom: 1px solid #2CA7B8;
+}
 .post-footer .prev-next .prev-post {
     float: left;
 }
@@ -1084,7 +1092,7 @@ body:not(.post-template) .post-title {
     content: "";
     width: 7px;
     height: 7px;
-    border: #E7EEF2 1px solid;
+    border: #E6E6E6 1px solid;
     position: absolute;
     bottom: -5px;
     left: 50%;
@@ -1112,7 +1120,7 @@ body:not(.post-template) .post-title {
     padding: 6px;
     background: #fff;
     z-index: 2;
-    box-shadow: #E7EEF2 0 0 0 1px;
+    box-shadow: #E6E6E6 0 0 0 1px;
 }
 
 .author-image .img {
@@ -1251,7 +1259,7 @@ body:not(.post-template) .post-title {
     content: "";
     width: 7px;
     height: 7px;
-    border: #E7EEF2 1px solid;
+    border: #E6E6E6 1px solid;
     position: absolute;
     bottom: -5px;
     left: 50%;
