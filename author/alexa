@@ -50,7 +50,7 @@
         <div class="author-meta">
             <span class="author-location icon-location">New York, NY</span>
             <span class="author-link icon-link"><a href="http://www.alexakaminsky.com">http://www.alexakaminsky.com</a></span>
-            <span class="author-stats"><i class="icon-stats"></i> 2 posts</span>
+            <span class="author-stats"><i class="icon-stats"></i> 1 post</span>
         </div>
     </section>
 
@@ -62,19 +62,6 @@
     </nav>
     </div>
     
-    <article class="post">
-        <header class="post-header">
-            <h2 class="post-title"><a href="../2014/10/23/test/index.html">test</a></h2>
-            <time class="post-date" datetime="2014-10-23">23 October 2014</time>
-        </header>
-        <section class="post-excerpt">
-            <p>test...<a class="read-more" href="../2014/10/23/test/index.html">read more</a></p>
-        </section>
-        <footer class="post-meta">
-            
-            
-        </footer>
-    </article>
     <article class="post">
         <header class="post-header">
             <h2 class="post-title"><a href="../2014/10/22/purpose-of-this-blog/index.html">Purpose Of This Blog</a></h2>
