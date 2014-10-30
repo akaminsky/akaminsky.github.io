@@ -519,6 +519,7 @@ margin on the iframe, cause it breaks stuff. */
     transform: rotate(-90deg);
     -webkit-animation: bounce 4s 2s infinite;
     animation: bounce 4s 2s infinite;
+    border: 0;
 }
 
 /* Stop it bouncing and increase contrast when hovered */
@@ -526,6 +527,7 @@ margin on the iframe, cause it breaks stuff. */
     color: #fff;
     -webkit-animation: none;
     animation: none;
+    border: 0;
 }
 
 /* Put a semi-opaque radial gradient behind the icon to make it more visible
