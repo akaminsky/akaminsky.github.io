@@ -1,0 +1,126 @@
+<!doctype html>
+
+<html lang="en" style="background-color:#FDEEA7;">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0;">
+
+  <title>Alexa Kaminsky UX Designer - Aereo</title>
+  <meta name="keywords" content="Alexa Kaminsky, AlexaKaminsky, UX Portfolio, Portfolio, pingg, New York, Alexa, Kaminsky, UX, User Experience, Design">
+  <meta name="description" content="Portfolio of UX Designer, Alexa Kaminsky.">
+
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style/style.css">
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon"> 
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> 
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <script src="script/modernizr.custom.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-18606720-5', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+<body style="background-color:#FDEEA7;">
+
+
+  <header>
+    <h1><a href="index.html">Alexa Kaminsky</a></h1>
+
+
+    <ul id="web-menu">
+      <li><a href="index.html">work</a></li>
+      <li><a href="about.html">about</a></li>
+      <li><a href="resume.html">resume</a></li>
+    </ul>
+
+    <a id="trigger-overlay" href="#"><div class="menu-btn"></div></a>
+
+
+  </header>
+
+
+<div class="container work" id="aereo">
+
+  <div class="descrip_col">
+    <div class="descrip_wrapper">
+      <h1 class="project">Aereo</h1>
+      <h3 class="title">Front-End Developer</h3>
+      <p class="description">Aereo was a technology company that allowed subscribers to view live and time-shifted streams of over-the-air television on Internet-connected devices. I was the Front-End Developer for the marketing side of the business. I developed various landing pages, responsive emails, and microsites used by the marketing team to target new and existing users.<br /><br />
+      
+      In addition to the front-end development work, I also did some UX work. I researched and designed an improved sign up flow for the negative option billing model and wireframed concepts for the next iteration of our serivce. Unfortunately on June 25th, the supreme court deemed Aereo illegal and we had to shut down so neither of these efforts were put into production.  
+      </p>
+      <a href="http://www.aereo.com" class="link" target="_blank">see it live</a>
+    </div>
+
+    <div class="arrows">
+      <div class="prev">
+        <a href=""></a>
+      </div>
+      <div class="next">
+        <a href=""></a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="images_col">
+    <div class="images_wrapper">
+      <img src="images/projectScreens/aereo_home.jpg">
+      <a href="http://www.protectmyantenna.com" target="_blank"><img src="images/projectScreens/aereo_protect.jpg"></a>
+      <a class="image_link" href="http://www.protectmyantenna.com" target="_blank">Protect My Antenna Microsite</a>
+      <img src="images/projectScreens/aereo_chromecast.jpg">
+      <img src="images/projectScreens/aereo_emails.jpg">
+      <img src="images/projectScreens/aereo_landingPage.jpg">
+      
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+<div class="overlay overlay-contentscale">
+  <button type="button" class="overlay-close">Close</button>
+  <nav>
+    <ul>
+      <li><a href="index.html">work</a></li>
+      <li><a href="about.html">about</a></li>
+      <li><a href="resume.html">resume</a></li>
+    </ul>
+  </nav>
+</div>
+
+<script src="script/script.js"></script>
+
+<!-- Google Analytics Events Tracking --> 
+<script>
+$( document ).ready(function() {
+  $('.image_link').on('click', function() {
+    ga('send', 'event', 'viewLive', 'protectAntenna');
+  });
+  $('.link').on('click', function() {
+    ga('send', 'event', 'viewLive', 'aereo');
+  });
+});
+</script>
+
+</body>
+</html>

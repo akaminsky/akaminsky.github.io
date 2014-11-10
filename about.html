@@ -1,0 +1,130 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0;">
+
+  <title>Alexa Kaminsky UX Designer - About</title>
+  <meta name="keywords" content="Alexa Kaminsky, AlexaKaminsky, UX Portfolio, Portfolio, pingg, New York, Alexa, Kaminsky, UX, User Experience, Design">
+  <meta name="description" content="Portfolio of UX Designer, Alexa Kaminsky.">
+
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style/style.css">
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon"> 
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> 
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <script src="script/modernizr.custom.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-18606720-5', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+</head>
+
+<body>
+
+
+  <header>
+    <h1><a href="index.html">Alexa Kaminsky</a></h1>
+
+
+    <ul id="web-menu">
+      <li><a href="index.html">work</a></li>
+      <li><a href="about.html">about</a></li>
+      <li><a href="resume.html">resume</a></li>
+    </ul>
+
+    <a id="trigger-overlay" href="#"><div class="menu-btn"></div></a>
+
+
+  </header>
+
+
+<div class="container" id="about">
+
+  <div class="wrapper">
+
+    <div class="image_container">
+      <img src="images/me.jpg">
+    </div>
+
+    <div class="bio_container">
+      <div class="bio">
+        <p>Hi, I'm Alexa. I’m currently a Front End Developer at Aereo, living in New York City. I graduated from Georgia Tech with a degree in Computational Media. </p>
+        <p>I want my work to be impactful and enrich the user’s life. Whether that's making their life easier, more enjoyable, or more meaningful.</p>
+        <p>I’m a tech junkie, beer enthusiast, pop culture nerd, and general TV fanatic. I enjoy bike riding, kickboxing, playing dodgeball, and traveling. </p>
+      </div>
+    </div>
+
+    <hr >
+    <div class="fun_facts">
+      <p>Random Facts</p>
+      <ul>
+        <li>I <a href="http://open.spotify.com/user/akaminsky3/playlist/6yGHL5RkWOg4dwnD8H5UWv" class="soundtracks" target="_blank">listen</a> to action/superhero movie soundtracks while I work.</li>
+        <li>I am allergic to life. Not really but the list is too long to fit here.</li>
+        <li>The only song I can rap from start to finish is <a href="http://www.youtube.com/watch?v=g4yYtwspOZ4" class="rap" target="_blank">'Patiently Waiting'</a> by 50 Cent ft Eminem.</li>
+        <li>I am <a href="http://instagram.com/p/gvymVDSAMa" class="mailchimp" target="_blank">obsessed</a> with Freddie from MailChimp, but my favorite animals are penguins.</li>
+        <li>I have toe thumbs. But so does <a href="http://www.huffingtonpost.com/2013/05/10/celebrities-with-weird-body-parts_n_3253717.html#slide=2435135" class="toethumbs" target="_blank">Megan Fox</a>, so I think I'm winning in the gene pool.</li>
+      </ul>
+    </div>
+
+
+  </div>
+
+</div>
+
+
+
+
+
+<div class="overlay overlay-contentscale">
+  <button type="button" class="overlay-close">Close</button>
+  <nav>
+    <ul>
+      <li><a href="index.html">work</a></li>
+      <li><a href="about.html">about</a></li>
+      <li><a href="resume.html">resume</a></li>
+    </ul>
+  </nav>
+</div>
+
+<script src="script/script.js"></script>
+
+<!-- Google Analytics Events Tracking --> 
+<script>
+$( document ).ready(function() {
+  $('.soundtracks').on('click', function() {
+    ga('send', 'event', 'About', 'soundtracks');
+  });
+
+  $('.rap').on('click', function() {
+    ga('send', 'event', 'About', '50cent');
+  });
+
+  $('.mailchimp').on('click', function() {
+    ga('send', 'event', 'About', 'mailchimp');
+  });
+
+  $('.toethumbs').on('click', function() {
+    ga('send', 'event', 'About', 'toethumbs');
+  });
+});
+</script>
+
+</body>
+</html>
