@@ -599,12 +599,15 @@ height: 30px;
   }
     #about .bio_container .bio {
       width: 80%;
-      font-size: 1.425em;
+      font-size: 1.2em;
       font-weight: 300;
       margin: 2em auto;
     }
     #about .bio_container p {
       margin-top: 0;
+    }
+    #about .bio_container a {
+      text-decoration: underline;
     }
 
   #about .fun_facts {
@@ -638,7 +641,6 @@ height: 30px;
     }
     #about .fun_facts a {
       font-weight: 700;
-      text-decoration: underline;
     }
     #about .fun_facts a:hover {
       color: rgb(44,167,184);
