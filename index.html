@@ -13,25 +13,27 @@
   <link href="https://fonts.googleapis.com/css?family=Karla|Playfair+Display" rel="stylesheet">
 
 	<style type="text/css">
+	.none {display: none;}
 	  body {
 	  	font-family: 'Karla', sans-serif;
+	  	line-height: 1.5em;
+	  	color: #333;
 	  }
 	  h1, h2, h3, h4, h5, h6 {
 	  	font-family: 'Playfair Display', serif;
+	  	color: #000;
 	  }
 		a {
-		  border-bottom: 2px solid #2ca7b8;
+		  border-bottom: 2px dotted #2ca7b8;
 		  text-decoration: none;
 		  color: #000;
 		  transition: border-bottom .05s ease-in;
 		}
 		a:hover {
-			border-bottom: 4px solid #2ca7b8;
+			border-bottom: 2px solid #2ca7b8;
 		}
 		.container {
 			padding-top: 50px;
-		}
-		.intro {
 			width: 55%;
 			margin: auto;
 		}
@@ -47,43 +49,52 @@
 		}
 		h1 {
 			font-size: 3em;
+			line-height: 1.3em;
+		}
+		.section {
+			padding: 1em 0;
+			border-bottom: 3px dotted #bbb;
 		}
 		.intro p {
-			font-size: 1.5em;
+			padding-bottom: 1em;
 		}
-		.coming-soon {
-			padding: 30px 0;
-			font-style: italic;
-			display: inline-block;
+		.experience {
+			padding-top: 0;
 		}
-		.coming-soon p {
-			background-color: #fbdc39;
+		.experience p {
+			font-size: 1.1em;
+		}
+		.resources {
+
+		}
+		.resources p {
 			font-size: 1em;
-			display: inline;
 		}
-		.in-the-meantime {
-			margin-bottom: 4em;
-		}
-		.in-the-meantime p {
-			font-size: 1.3em;
-			margin-bottom: 0.5em;
-		}
-		.in-the-meantime li {
+		.resources li {
 			display: block;
 			line-height: 2em;
+			margin-bottom: 1.5em;
 		}
+			.resources li a {
+				font-size: 1.4em;
+				display: inline-block;
+				margin-bottom: .5em;
+			}
+			.resources li span {
+				display: block;
+				line-height: 1.5em;
+			}
 
 
 		.contact {
-			margin-top: 20px;
+			border-bottom: 0;
+			padding-bottom: 4em;
 		}
 
 		@media screen and (max-width: 700px) {
-			.intro {
-				width: 80%;
-			}
 			.container {
 				padding-top: 25px;
+				width: 80%;
 			}
 		}
 
@@ -121,37 +132,58 @@
 <body>
 <div class="container">
 	<div class="intro">
-		<h1> Hi, I'm Alexa Kaminsky </h1>
-		<p> Lead Designer at <a href="http://www.booking.com" target="_blank">Booking.com</a></p>
-		<p> Formerly at <a href="http://www.aereo.com" target="_blank">Aereo</a> & <a href="http://www.pingg.com" target="_blank">pingg</a> </p>
+		<h1 class="hi">Hi! I'm Alexa Kaminsky</h1>
+		<p>
+		I am an energetic, action-oriented, idealist who loves solving complex problems and fostering communities. <br ><br >My approach includes first trying to understand the problem and why it is important to solve for the user and the business. Then I motivate and bring the right people together to collaborate and figure out the best possible solutions. <br ><br >What I've learned is that the perfect solution is not always the right solution. Happy to chat more on that. </p>
+	</div>
+	<div class="experience section">
+		<h2>Currently</h2>
+		<p class="none">Senior Product Designer at <a href="http://flexport.com" target="_blank">Flexport</a> in Amsterdam </p>
+		<p>Lead Designer at <a href="http://booking.com" target="_blank">Booking.com</a> in Amsterdam </p>
 
-		<div class="coming-soon">
-			<p>Portfolio in progress... #2020goals</p>
-		</div>
-		<div class="in-the-meantime">
-			<p>In the meantime, check out some articles I wrote...</p>
-			<ul>
-			<li><a href="https://uxdesign.cc/design-libs-the-best-design-statement-methods-in-one-place-e3cd4325a0d2?source=friends_link&sk=41d36a05bdc18f91286152b9b8d06e8e" target="_blank"> Design Libs: the best design statement methods in one place </a></li>
-			<li><a href="https://uxdesign.cc/designing-in-google-sheets-with-4-features-404acbf5936e?source=friends_link&sk=a966d5d25e2732fd3989067f68c2a607" target="_blank"> Designing in Google Sheets using 4 features </a></li>
-			<li><a href="https://uxdesign.cc/designing-for-the-onboarder-core-user-e8458e57f8a7?source=friends_link&sk=8663f5c9885e44a529bb016e675afdc4" target="_blank">Designing for the onboarding & core user</a></li>
-			<li><a href="https://medium.com/@alexakaminsky/the-free-trial-trap-b14e27849f1e" target="_blank">The free trial trap</a></li>
-			</ul>
-		</div>
+		<h2>Previously</h2>
+		
+		<p>UX Designer at <a href="https://www.vox.com/2018/11/7/18073200/aereo" target="_blank">Aereo</a> in New York </p>
+	</div>
 
-		<div class="contact">
-			<ul>
-				<li><a href="mailto:akaminsky9@gmail.com">Email</a></li>
-				<li>|</li>
-				<li><a href="https://www.linkedin.com/in/alexajkaminsky/" target="_blank">Linkedin</a></li>
-				<li>|</li>
-				<li><a href="https://medium.com/@alexakaminsky" target="_blank">Medium</a></li>
-				<li>|</li>
-				<li><a href="https://500px.com/akaminsky9" target="_blank">500px</a></li>
-				<li>|</li>
-				<li><a href="AlexaKaminskyResume2020.pdf" target="_blank">Resume</a></li>
-			</ul>
-		</div>
+	<div class="resources section">
+		<h2>Resources I've created</h2>
+		<p>I’ve picked up some tips and tricks throughout my career and wanted to share with the community:</p>
+		<ul>
+			<li>
+				<a href="http://designlibs.com" target="_blank"> Design Libs</a>
+				<span>
+					Design Libs is your go-to reference for how to write and use some of the most common design thinking exercises, practices, and methods.
+				</span>
+			</li>
+			<li>
+				<a href="http://collabplaybook.com" target="_blank">Collaboration Playbook</a>
+				<span>
+					The collaboration playbook is a collection of activities, articles, and frameworks to help you navigate through the six phases of the collaboration process.
+				</span>
+			</li>
+			<li>
+				<a href="https://docs.google.com/spreadsheets/d/1Ewhzx1rBL86N1St6HE_aV23vLLZ_jQIZuDEjr1kBC4U/edit" target="_blank"> Designing in Google Sheets</a>
+				<span>
+					Learn how to incorporate functions (formulas), conditional formatting, data validation, and filters into your Google Sheets to create a well designed, clear, and organized Google Sheet.
+				</span>
+			</li>
+		</ul>
+	</div>
 
+	<div class="contact section">
+		<h2>Get to know & get in touch</h2>
+		<ul>
+			<li><a href="mailto:akaminsky9@gmail.com">Email</a></li>
+			<li>|</li>
+			<li><a href="https://www.linkedin.com/in/alexajkaminsky/" target="_blank">Linkedin</a></li>
+			<li>|</li>
+			<li><a href="https://medium.com/@alexakaminsky" target="_blank">Medium</a></li>
+			<li>|</li>
+			<li><a href="https://500px.com/akaminsky9" target="_blank">500px</a></li>
+			<li>|</li>
+			<li><a href="AlexaKaminskyResume2020.pdf" target="_blank">Resume</a></li>
+		</ul>
 	</div>
 
 </div>
