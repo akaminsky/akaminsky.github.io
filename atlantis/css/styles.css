@@ -1,3 +1,69 @@
+
+body {
+	font-size: 20px;
+}
+
+a {
+	text-decoration: none;
+}
+
+
+		ul {
+			padding :0;
+			margin: 0;
+		}
+		li {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			display: inline-block;
+		}
+
+.welcome {
+	padding: 4rem 0px;
+	border-bottom: 3px dotted #bbb;
+	margin-bottom: 4rem;
+}
+
+.welcome-message {
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+.contact {
+	font-size: 16px;
+	margin-top: -10px;
+}
+
+.section-title {
+	text-align: left;
+	padding-bottom: 4rem;
+	margin-bottom: 0;
+}
+
+
+
 .case-study {
 	text-align: left;
+	padding-bottom: 4rem;
+}
+
+
+.case-study-title { 
+	margin-bottom: 1rem;
+}
+
+
+.case-study-company {
+	font-style: italic;
+
+}
+
+
+
+@media (min-width: 600px) {
+
+.case-study {
+	padding-right: 25%;
+}
 }
