@@ -19,8 +19,8 @@ a {
 			display: inline-block;
 		}
 
-.welcome {
-	padding: 4rem 10px;
+.welcome, .case-studies {
+	padding: 3rem 0;
 	border-bottom: 3px dotted #bbb;
 	margin-bottom: 3rem;
 	text-align: left;
@@ -39,7 +39,7 @@ a {
 
 .contact {
 	font-size: 16px;
-	margin-top: -10px;
+	padding-bottom: 2em;
 }
 
 .section-title {
@@ -50,13 +50,16 @@ a {
 
 
 
-.case-study {
+.case-study, .resource {
 	text-align: left;
 	padding-bottom: 3rem;
 }
+.case-study:last-of-type {
+	padding-bottom: 0;
+}
 
 
-.case-study-title { 
+.case-study-title, .resource-title { 
 	margin-bottom: 1rem;
 }
 
@@ -72,7 +75,7 @@ a {
 
 @media (min-width: 600px) {
 
-.case-study {
+.case-study, .resource {
 	padding-right: 25%;
 }
 }
