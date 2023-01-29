@@ -20,7 +20,8 @@ a {
 		}
 
 .welcome, .case-studies {
-	padding: 3rem 0;
+	padding-top: 3rem;
+	padding-bottom: 3rem;
 	border-bottom: 3px dotted #bbb;
 	margin-bottom: 3rem;
 	text-align: left;
