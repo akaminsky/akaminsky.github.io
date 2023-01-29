@@ -22,7 +22,14 @@ a {
 .welcome {
 	padding: 4rem 10px;
 	border-bottom: 3px dotted #bbb;
-	margin-bottom: 4rem;
+	margin-bottom: 3rem;
+	text-align: left;
+}
+
+.welcome .section-title {
+	text-align: left;
+	padding-bottom: 0;
+	margin-bottom: 0;
 }
 
 .welcome-message {
@@ -37,7 +44,7 @@ a {
 
 .section-title {
 	text-align: left;
-	padding-bottom: 4rem;
+	padding-bottom: 3rem;
 	margin-bottom: 0;
 }
 
@@ -45,7 +52,7 @@ a {
 
 .case-study {
 	text-align: left;
-	padding-bottom: 4rem;
+	padding-bottom: 3rem;
 }
 
 
@@ -56,6 +63,8 @@ a {
 
 .case-study-company {
 	font-style: italic;
+	font-size: .9em;
+    color: #666;
 
 }
 
