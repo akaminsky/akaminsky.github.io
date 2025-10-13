@@ -6,6 +6,10 @@ class GuitarSongbook {
             capo: '',
             search: ''
         };
+        this.currentSort = {
+            column: 'title',
+            direction: 'asc'
+        };
         this.editingId = null;
         this.spotifyAccessToken = null;
         this.spotifyClientId = 'b43e82c8141440d3b47fd8f5456a2015'; // Replace this with your actual Spotify Client ID
@@ -13,6 +17,7 @@ class GuitarSongbook {
         this.initializeElements();
         this.bindEvents();
         this.updateChordFilter();
+        this.initializeSortIndicator();
         this.render();
         this.updateStats();
         this.initializeSpotify();
@@ -88,6 +93,14 @@ class GuitarSongbook {
             if (e.target === this.spotifyModal) {
                 this.closeModal();
             }
+        });
+
+        // Sort events
+        document.querySelectorAll('.sortable').forEach(header => {
+            header.addEventListener('click', (e) => {
+                const column = e.currentTarget.dataset.sort;
+                this.sortBy(column);
+            });
         });
     }
 
@@ -270,6 +283,71 @@ class GuitarSongbook {
         this.render();
     }
 
+    initializeSortIndicator() {
+        // Set initial sort indicator
+        const activeHeader = document.querySelector(`[data-sort="${this.currentSort.column}"]`);
+        if (activeHeader) {
+            activeHeader.classList.add(`sort-${this.currentSort.direction}`);
+        }
+    }
+
+    sortBy(column) {
+        // Toggle direction if clicking the same column
+        if (this.currentSort.column === column) {
+            this.currentSort.direction = this.currentSort.direction === 'asc' ? 'desc' : 'asc';
+        } else {
+            this.currentSort.column = column;
+            this.currentSort.direction = 'asc';
+        }
+
+        // Update header classes
+        document.querySelectorAll('.sortable').forEach(header => {
+            header.classList.remove('sort-asc', 'sort-desc');
+        });
+
+        const activeHeader = document.querySelector(`[data-sort="${column}"]`);
+        activeHeader.classList.add(`sort-${this.currentSort.direction}`);
+
+        // Re-render with new sort
+        this.render();
+    }
+
+    getSortedAndFilteredSongs() {
+        let songs = this.getFilteredSongs();
+        
+        // Sort songs
+        songs.sort((a, b) => {
+            let aVal, bVal;
+
+            switch (this.currentSort.column) {
+                case 'title':
+                    aVal = a.title.toLowerCase();
+                    bVal = b.title.toLowerCase();
+                    break;
+                case 'artist':
+                    aVal = a.artist.toLowerCase();
+                    bVal = b.artist.toLowerCase();
+                    break;
+                case 'chords':
+                    aVal = a.chords.length;
+                    bVal = b.chords.length;
+                    break;
+                case 'capo':
+                    aVal = parseInt(a.capoPosition);
+                    bVal = parseInt(b.capoPosition);
+                    break;
+                default:
+                    return 0;
+            }
+
+            if (aVal < bVal) return this.currentSort.direction === 'asc' ? -1 : 1;
+            if (aVal > bVal) return this.currentSort.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        return songs;
+    }
+
     getFilteredSongs() {
         return this.songs.filter(song => {
             // Chord filter
@@ -297,9 +375,9 @@ class GuitarSongbook {
     }
 
     render() {
-        const filteredSongs = this.getFilteredSongs();
+        const sortedAndFilteredSongs = this.getSortedAndFilteredSongs();
         
-        if (filteredSongs.length === 0) {
+        if (sortedAndFilteredSongs.length === 0) {
             this.songsTable.style.display = 'none';
             this.emptyState.style.display = 'block';
             return;
@@ -308,7 +386,7 @@ class GuitarSongbook {
         this.songsTable.style.display = 'table';
         this.emptyState.style.display = 'none';
 
-        this.songsList.innerHTML = filteredSongs.map(song => this.createSongHTML(song)).join('');
+        this.songsList.innerHTML = sortedAndFilteredSongs.map(song => this.createSongHTML(song)).join('');
         
         // Bind events for each song
         this.bindSongEvents();
@@ -387,7 +465,7 @@ class GuitarSongbook {
 
     updateStats() {
         const total = this.songs.length;
-        const filtered = this.getFilteredSongs().length;
+        const filtered = this.getSortedAndFilteredSongs().length;
         
         let countText = '';
         if (this.currentFilter.chord || this.currentFilter.capo || this.currentFilter.search) {
