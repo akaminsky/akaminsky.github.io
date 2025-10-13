@@ -403,9 +403,17 @@ class GuitarSongbook {
         const capoBadge = song.capoPosition === 0 ? 'No Capo' : `<span class="capo-badge">${song.capoPosition}</span>`;
         const spotifyIndicator = song.spotifyUrl ? '<span class="material-icons spotify-indicator">music_note</span>' : '';
         const tabsIndicator = song.tabUrl ? `<a href="${song.tabUrl}" target="_blank" rel="noopener noreferrer" title="View tabs on Ultimate Guitar"><span class="material-icons tabs-link">library_music</span></a>` : '';
+        const hasChords = song.chords && song.chords.length > 0;
         
         return `
             <tr class="song-row" data-id="${song.id}">
+                <td class="expand-cell">
+                    ${hasChords ? `
+                        <button class="expand-btn" title="Show chord diagrams">
+                            <span class="material-icons">keyboard_arrow_right</span>
+                        </button>
+                    ` : ''}
+                </td>
                 <td class="song-cell">
                     <div class="song-title">${this.escapeHtml(song.title)}</div>
                     ${song.notes ? `
@@ -417,7 +425,7 @@ class GuitarSongbook {
                 </td>
                 <td class="artist-cell">${this.escapeHtml(song.artist)}</td>
                 <td class="chords-cell">
-                    ${song.chords.length > 0 ? `
+                    ${hasChords ? `
                         <div class="chords-list">
                             ${song.chords.map(chord => `<span class="chord-badge">${this.escapeHtml(chord)}</span>`).join('')}
                         </div>
@@ -442,10 +450,39 @@ class GuitarSongbook {
                     </div>
                 </td>
             </tr>
+            ${hasChords ? `
+                <tr class="chord-chart-row" data-id="${song.id}" style="display: none;">
+                    <td colspan="8">
+                        <div class="chord-chart-container">
+                            ${this.createChordCharts(song.chords)}
+                        </div>
+                    </td>
+                </tr>
+            ` : ''}
         `;
     }
 
     bindSongEvents() {
+        // Expand chord chart events
+        document.querySelectorAll('.expand-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const songRow = e.target.closest('.song-row');
+                const songId = songRow.dataset.id;
+                const chordRow = document.querySelector(`.chord-chart-row[data-id="${songId}"]`);
+                const icon = btn.querySelector('.material-icons');
+                
+                if (chordRow.style.display === 'none') {
+                    chordRow.style.display = 'table-row';
+                    icon.textContent = 'keyboard_arrow_down';
+                    btn.title = 'Hide chord diagrams';
+                } else {
+                    chordRow.style.display = 'none';
+                    icon.textContent = 'keyboard_arrow_right';
+                    btn.title = 'Show chord diagrams';
+                }
+            });
+        });
+
         // Play button events
         document.querySelectorAll('.play-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -788,6 +825,79 @@ class GuitarSongbook {
         window.open(ugSearchUrl, '_blank', 'noopener,noreferrer');
         
         this.showNotification('Opening Ultimate Guitar search in new tab...', 'info');
+    }
+
+    // Chord Chart Functions
+    createChordCharts(chords) {
+        return `
+            <div class="chord-charts">
+                ${chords.map(chord => this.createChordDiagram(chord)).join('')}
+            </div>
+        `;
+    }
+
+    createChordDiagram(chordName) {
+        const chordData = findChord(chordName);
+        
+        if (!chordData) {
+            return `
+                <div class="chord-diagram">
+                    <div class="chord-name">${this.escapeHtml(chordName)}</div>
+                    <div class="chord-not-found">Diagram not available</div>
+                </div>
+            `;
+        }
+
+        const { fingers, name, barre } = chordData;
+        const strings = ['E', 'A', 'D', 'G', 'B', 'e'];
+        
+        return `
+            <div class="chord-diagram">
+                <div class="chord-name">${this.escapeHtml(chordName)}</div>
+                <div class="chord-full-name">${name}</div>
+                <svg class="chord-svg" viewBox="0 0 100 120">
+                    <!-- Strings -->
+                    ${[0, 1, 2, 3, 4, 5].map(i => `
+                        <line x1="${15 + i * 14}" y1="20" x2="${15 + i * 14}" y2="100" 
+                              stroke="#37352f" stroke-width="1"/>
+                    `).join('')}
+                    
+                    <!-- Frets -->
+                    ${[0, 1, 2, 3, 4].map(i => `
+                        <line x1="15" y1="${20 + i * 16}" x2="85" y2="${20 + i * 16}" 
+                              stroke="#37352f" stroke-width="${i === 0 ? '3' : '1'}"/>
+                    `).join('')}
+                    
+                    <!-- Barre chord indicator -->
+                    ${barre ? `
+                        <rect x="12" y="${20 + (barre - 1) * 16 + 6}" width="74" height="4" 
+                              fill="#37352f" rx="2"/>
+                    ` : ''}
+                    
+                    <!-- Finger positions -->
+                    ${fingers.map((fret, stringIndex) => {
+                        const x = 15 + stringIndex * 14;
+                        if (fret === -1) {
+                            // X - don't play
+                            return `<text x="${x}" y="15" text-anchor="middle" font-size="12" fill="#dc3545">×</text>`;
+                        } else if (fret === 0) {
+                            // O - open string
+                            return `<circle cx="${x}" cy="12" r="4" fill="none" stroke="#28a745" stroke-width="2"/>`;
+                        } else {
+                            // Finger position
+                            const y = 20 + (fret - 0.5) * 16 + 8;
+                            return `<circle cx="${x}" cy="${y}" r="5" fill="#37352f"/>`;
+                        }
+                    }).join('')}
+                    
+                    <!-- String names at bottom -->
+                    ${strings.map((str, i) => `
+                        <text x="${15 + i * 14}" y="115" text-anchor="middle" 
+                              font-size="10" fill="#787774">${str}</text>
+                    `).join('')}
+                </svg>
+            </div>
+        `;
     }
 }
 
