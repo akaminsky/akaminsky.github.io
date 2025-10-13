@@ -8,7 +8,7 @@ class GuitarSongbook {
         };
         this.editingId = null;
         this.spotifyAccessToken = null;
-        this.spotifyClientId = 'YOUR_SPOTIFY_CLIENT_ID'; // Replace with your Spotify Client ID
+        this.spotifyClientId = 'b43e82c8141440d3b47fd8f5456a2015'; // Replace this with your actual Spotify Client ID
         
         this.initializeElements();
         this.bindEvents();
@@ -411,9 +411,36 @@ class GuitarSongbook {
 
     // Spotify Methods
     async initializeSpotify() {
-        // For demo purposes, we'll use a public endpoint that doesn't require authentication
-        // In production, you would need to implement proper OAuth flow
-        this.showNotification('Spotify search ready! Note: For full functionality, you need to set up Spotify API credentials.', 'info');
+        // Try to get a Spotify access token using the public Client ID
+        await this.getPublicSpotifyToken();
+    }
+
+    async getPublicSpotifyToken() {
+        try {
+            // Use a public CORS proxy to get a token (works without backend!)
+            const response = await fetch('https://accounts.spotify.com/api/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    grant_type: 'client_credentials',
+                    client_id: this.spotifyClientId,
+                    client_secret: '59ca8582f8c2434494e1f41efee70166' // You'll need to add this
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                this.spotifyAccessToken = data.access_token;
+                console.log('✅ Spotify connected! Search for any song now.');
+                this.showNotification('Spotify connected! You can now search millions of songs.', 'success');
+            } else {
+                console.log('ℹ️ Using demo mode - add your Client Secret for full access');
+            }
+        } catch (error) {
+            console.log('ℹ️ Using demo mode with 10 sample songs');
+        }
     }
 
     async searchSpotify() {
@@ -425,27 +452,31 @@ class GuitarSongbook {
 
         this.showSearchLoading();
         
-        try {
-            // Using a CORS proxy for demo purposes
-            // In production, you would use your own backend or implement proper OAuth
-            const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=10`, {
-                headers: {
-                    'Authorization': `Bearer ${this.spotifyAccessToken || 'demo-token'}`,
-                    'Content-Type': 'application/json'
+        // If we have a valid access token, use the real Spotify API
+        if (this.spotifyAccessToken) {
+            try {
+                const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=10`, {
+                    headers: {
+                        'Authorization': `Bearer ${this.spotifyAccessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.tracks && data.tracks.items) {
+                        this.displaySearchResults(data.tracks.items);
+                        return;
+                    }
                 }
-            });
-
-            if (!response.ok) {
-                throw new Error('Search failed');
+            } catch (error) {
+                console.log('Spotify API error:', error);
             }
-
-            const data = await response.json();
-            this.displaySearchResults(data.tracks.items);
-        } catch (error) {
-            // Fallback to demo data for demonstration
-            console.log('Using demo data for search:', query);
-            this.displayDemoSearchResults(query);
         }
+        
+        // Fallback to demo data if API fails or not configured
+        console.log('Using demo data for search:', query);
+        this.displayDemoSearchResults(query);
     }
 
     displayDemoSearchResults(query) {
