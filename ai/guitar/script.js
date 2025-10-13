@@ -29,6 +29,8 @@ class GuitarSongbook {
         this.songTitle = document.getElementById('songTitle');
         this.artist = document.getElementById('artist');
         this.spotifyUrl = document.getElementById('spotifyUrl');
+        this.tabUrl = document.getElementById('tabUrl');
+        this.searchTabsBtn = document.getElementById('searchTabsBtn');
         this.capoPosition = document.getElementById('capoPosition');
         this.chords = document.getElementById('chords');
         this.notes = document.getElementById('notes');
@@ -77,6 +79,9 @@ class GuitarSongbook {
         this.spotifySearch.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.searchSpotify();
         });
+
+        // Ultimate Guitar tabs search
+        this.searchTabsBtn.addEventListener('click', () => this.searchUltimateGuitar());
         
         // Filter events
         this.chordFilter.addEventListener('change', () => this.applyFilters());
@@ -112,6 +117,7 @@ class GuitarSongbook {
             title: this.songTitle.value.trim(),
             artist: this.artist.value.trim(),
             spotifyUrl: this.spotifyUrl.value.trim(),
+            tabUrl: this.tabUrl.value.trim(),
             capoPosition: parseInt(this.capoPosition.value),
             chords: this.parseChords(this.chords.value.trim()),
             notes: this.notes.value.trim(),
@@ -171,10 +177,11 @@ class GuitarSongbook {
         if (song) {
             this.songTitle.value = song.title;
             this.artist.value = song.artist;
-            this.spotifyUrl.value = song.spotifyUrl;
+            this.spotifyUrl.value = song.spotifyUrl || '';
+            this.tabUrl.value = song.tabUrl || '';
             this.capoPosition.value = song.capoPosition;
             this.chords.value = song.chords.join(', ');
-            this.notes.value = song.notes;
+            this.notes.value = song.notes || '';
             this.editingId = id;
             
             // Open side panel for editing
@@ -395,6 +402,7 @@ class GuitarSongbook {
     createSongHTML(song) {
         const capoBadge = song.capoPosition === 0 ? 'No Capo' : `<span class="capo-badge">${song.capoPosition}</span>`;
         const spotifyIndicator = song.spotifyUrl ? '<span class="material-icons spotify-indicator">music_note</span>' : '';
+        const tabsIndicator = song.tabUrl ? `<a href="${song.tabUrl}" target="_blank" rel="noopener noreferrer" title="View tabs on Ultimate Guitar"><span class="material-icons tabs-link">library_music</span></a>` : '';
         
         return `
             <tr class="song-row" data-id="${song.id}">
@@ -417,6 +425,7 @@ class GuitarSongbook {
                 </td>
                 <td class="capo-cell">${capoBadge}</td>
                 <td class="spotify-cell">${spotifyIndicator}</td>
+                <td class="tabs-cell">${tabsIndicator}</td>
                 <td class="actions-cell">
                     <div class="song-actions">
                         ${song.spotifyUrl ? `
@@ -759,6 +768,26 @@ class GuitarSongbook {
                 }
             }, 300);
         }, 3000);
+    }
+
+    // Ultimate Guitar Search
+    searchUltimateGuitar() {
+        const title = this.songTitle.value.trim();
+        const artist = this.artist.value.trim();
+        
+        if (!title || !artist) {
+            this.showNotification('Please enter both song title and artist first', 'error');
+            return;
+        }
+
+        // Create search URL for Ultimate Guitar
+        const searchQuery = `${artist} ${title}`.replace(/\s+/g, ' ').trim();
+        const ugSearchUrl = `https://www.ultimate-guitar.com/search.php?search_type=title&value=${encodeURIComponent(searchQuery)}`;
+        
+        // Open in new tab
+        window.open(ugSearchUrl, '_blank', 'noopener,noreferrer');
+        
+        this.showNotification('Opening Ultimate Guitar search in new tab...', 'info');
     }
 }
 
