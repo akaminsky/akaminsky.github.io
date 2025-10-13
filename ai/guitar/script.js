@@ -745,7 +745,8 @@ class GuitarSongbook {
         // Bind select events
         document.querySelectorAll('.select-song-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const track = JSON.parse(e.target.dataset.track);
+                const button = e.target.closest('.select-song-btn');
+                const track = JSON.parse(button.dataset.track);
                 this.selectSpotifyTrack(track);
             });
         });
