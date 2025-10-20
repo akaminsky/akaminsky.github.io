@@ -2,10 +2,26 @@
 // This keeps your API key secure on the server
 
 exports.handler = async (event, context) => {
+  // Handle CORS preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      },
+      body: ''
+    };
+  }
+
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      },
       body: JSON.stringify({ error: 'Method not allowed' })
     };
   }
@@ -16,6 +32,10 @@ exports.handler = async (event, context) => {
   if (!apiKey) {
     return {
       statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
       body: JSON.stringify({ error: 'OpenAI API key not configured' })
     };
   }
@@ -43,6 +63,10 @@ exports.handler = async (event, context) => {
       const error = await response.text();
       return {
         statusCode: response.status,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
         body: JSON.stringify({ error: 'OpenAI API error', details: error })
       };
     }
@@ -60,6 +84,10 @@ exports.handler = async (event, context) => {
   } catch (error) {
     return {
       statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
       body: JSON.stringify({ error: 'Internal server error', message: error.message })
     };
   }
