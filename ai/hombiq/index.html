@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hombiq - AI-Powered Home Repair Assessment</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="#" onclick="navigateTo('dashboard')" id="brand-link" class="brand-link">
+                    <span class="brand-icon">🏠</span>
+                    <span class="brand-name">Hombiq</span>
+                </a>
+            </div>
+            
+            <div class="nav-links" id="nav-links">
+                <!-- Logged out navigation -->
+                <div class="nav-logged-out">
+                    <a href="#" onclick="navigateTo('triage')" class="nav-link">Get Started</a>
+                    <button class="btn btn-primary" onclick="showLoginModal()">Sign In</button>
+                </div>
+                
+                <!-- Logged in navigation -->
+                <div class="nav-logged-in" style="display: none;">
+                    <a href="#" onclick="navigateTo('assessments')" class="nav-link">My Assessments</a>
+                    <a href="#" onclick="navigateTo('network')" class="nav-link">Network</a>
+                    <a href="#" onclick="navigateTo('points')" class="nav-link">Points</a>
+                    
+                    <div class="user-dropdown">
+                        <button class="user-btn" onclick="toggleUserDropdown()">
+                            <span class="user-avatar">👤</span>
+                            <span class="user-name" id="user-name">User</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="user-dropdown">
+                            <a href="#" onclick="navigateTo('profile')">Profile</a>
+                            <a href="#" onclick="navigateTo('settings')">Settings</a>
+                            <a href="#" onclick="logout()">Sign Out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Landing Page (Logged Out) -->
+        <div id="landing-page" class="page">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h1>Get Expert Home Repair Advice</h1>
+                    <p>AI-powered triage, community wisdom, and professional assessments to help you make informed repair decisions.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-large" onclick="navigateTo('triage')">Start Free Assessment</button>
+                        <button class="btn btn-secondary btn-large" onclick="showLoginModal()">Sign In</button>
+                    </div>
+                </div>
+                <div class="hero-features">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3>AI Triage</h3>
+                        <p>Get instant AI-powered diagnosis and recommendations</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3>Community Wisdom</h3>
+                        <p>Get advice from friends and the community</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👨‍🔧</div>
+                        <h3>Professional Assessment</h3>
+                        <p>Connect with licensed professionals for expert advice</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment Creation Page -->
+        <div id="triage-page" class="page">
+
+
+            <!-- AI Triage Tab -->
+            <div id="ai-triage-tab" class="tab-content active">
+                <div class="triage-layout">
+                        <div id="ai-chat-container" class="ai-chat-container">
+                            <div class="chat-header">
+                                <h3>Chat with Hombiq AI</h3>
+                                <p>Describe your home project and get instant AI-powered guidance.</p>
+                            </div>
+                            <div class="chat-messages" id="chat-messages">
+                                <div class="message ai-message">
+                                    <div class="message-avatar">🤖</div>
+                                    <div class="message-content">
+                                        <p>Hi! I'm here to help with your home project. Please describe what you're working on and I'll provide guidance and recommendations.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input">
+                                <input type="text" id="chat-input" placeholder="Describe your home project..." onkeypress="handleChatKeypress(event)">
+                                <button class="btn btn-primary" onclick="sendChatMessage()">Send</button>
+                            </div>
+                        </div>
+                        
+                        <div class="resize-handle"></div>
+                        
+                        <div id="assessment-sidebar" class="assessment-sidebar">
+                            <div id="assessment-content" class="assessment-content">
+                                <div class="empty-state">
+                                    <div class="empty-icon">💬</div>
+                                    <h4>Start Your Conversation</h4>
+                                    <p>Begin chatting with the AI assistant to get your personalized assessment and recommendations.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ask Friends Modal -->
+        <div id="ask-friends-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>👥 Ask My Friends</h3>
+                    <button class="close-modal-btn" onclick="closeAskFriendsModal()">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="friend-message">Add a personal message (optional)</label>
+                        <textarea id="friend-message" placeholder="Add any additional context or specific questions for your friends..." rows="3"></textarea>
+                    </div>
+                    
+                    <div class="assessment-preview">
+                        <h4>Assessment Summary</h4>
+                        <div id="assessment-preview-content">
+                            <!-- Assessment content will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeAskFriendsModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="createCommunityPost()">Post to Community</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page (Logged In) -->
+        <div id="dashboard-page" class="page">
+            <div class="dashboard-layout">
+                <!-- Left Sidebar - Active Assessments -->
+                <div class="dashboard-sidebar">
+                    <div class="sidebar-header">
+                        <h3>Active Assessments</h3>
+                        <button class="btn btn-primary btn-sm" onclick="navigateTo('triage')">New Assessment</button>
+                    </div>
+                    
+                    <div class="assessments-list" id="active-assessments">
+                        <p class="no-data">No active assessments. <a href="#" onclick="navigateTo('triage')">Create your first assessment</a></p>
+                    </div>
+                </div>
+
+                <!-- Main Feed -->
+                <div class="dashboard-main">
+                    <div class="feed-header">
+                        <h2>Community Feed</h2>
+                        <p>Stay updated with home repair discussions and get help from the community.</p>
+                    </div>
+
+                    <!-- Create Post -->
+                    <div class="create-post-card">
+                        <div class="create-post-header">
+                            <div class="user-avatar-small">👤</div>
+                            <input type="text" placeholder="What's on your mind?" class="create-post-input" onclick="showNewTopicModal()">
+                        </div>
+                        <div class="create-post-actions">
+                            <button class="action-btn" onclick="showNewTopicModal()">
+                                <span class="action-icon">📝</span>
+                                <span>Create Post</span>
+                            </button>
+                            <button class="action-btn" onclick="showNewTopicModal()">
+                                <span class="action-icon">📷</span>
+                                <span>Photo/Video</span>
+                            </button>
+                            <button class="action-btn" onclick="showNewTopicModal()">
+                                <span class="action-icon">❓</span>
+                                <span>Ask Question</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Feed Filters -->
+                    <div class="feed-filters">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" onclick="filterFeed('all')">All Posts</button>
+                            <button class="filter-tab" onclick="filterFeed('questions')">Questions</button>
+                            <button class="filter-tab" onclick="filterFeed('solutions')">Solutions</button>
+                            <button class="filter-tab" onclick="filterFeed('tips')">Tips</button>
+                        </div>
+                        
+                        <div class="category-filter">
+                            <select id="category-select" onchange="filterByCategory(this.value)">
+                                <option value="all">All Categories</option>
+                                <option value="plumbing">Plumbing</option>
+                                <option value="electrical">Electrical</option>
+                                <option value="hvac">HVAC</option>
+                                <option value="roofing">Roofing</option>
+                                <option value="renovation">Renovation</option>
+                                <option value="home-improvement">Home Improvement</option>
+                                <option value="home-automation">Smart Home</option>
+                                <option value="landscaping">Landscaping</option>
+                                <option value="general">General</option>
+                            </select>
+                        </div>
+                        
+                        <div class="search-box">
+                            <input type="text" placeholder="Search posts..." id="feed-search" onkeyup="searchPosts()">
+                        </div>
+                    </div>
+
+                    <!-- Posts Feed -->
+                    <div id="posts-feed" class="posts-feed">
+                        <!-- Posts will be dynamically generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessments Page -->
+        <div id="assessments-page" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h2>My Assessments</h2>
+                    <button class="btn btn-primary" onclick="navigateTo('triage')">New Assessment</button>
+                </div>
+
+                <div class="assessments-filter">
+                    <button class="filter-btn active" onclick="filterAssessments('all')">All</button>
+                    <button class="filter-btn" onclick="filterAssessments('active')">Active</button>
+                    <button class="filter-btn" onclick="filterAssessments('completed')">Completed</button>
+                </div>
+
+                <div id="assessments-list" class="assessments-list">
+                    <p class="no-data">No assessments yet. <a href="#" onclick="navigateTo('triage')">Create your first assessment</a></p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Issue Details Page -->
+        <div id="issue-details-page" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h2>Assessment Details</h2>
+                    <button class="btn btn-secondary" onclick="navigateTo('dashboard')">Back to Dashboard</button>
+                </div>
+
+                <div id="issue-details-content">
+                    <div class="assessment-details">
+                        <div class="assessment-header">
+                            <h3 id="assessment-title">Loading...</h3>
+                            <div class="assessment-status-badge" id="assessment-status">Active</div>
+                        </div>
+                        
+                        <div class="assessment-description" id="assessment-description">
+                            <p>Loading assessment details...</p>
+                        </div>
+
+                        <div class="assessment-timeline">
+                            <h4>Assessment Timeline</h4>
+                            <div class="timeline-steps" id="timeline-steps">
+                                <!-- Timeline will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="assessment-media" id="assessment-media">
+                            <h4>Media & Documentation</h4>
+                            <div class="media-grid">
+                                <!-- Media will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="community-responses" id="community-responses">
+                            <h4>Community Responses</h4>
+                            <div class="responses-list">
+                                <!-- Responses will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="assessment-actions">
+                            <button class="btn btn-primary" onclick="startConsultation()">Start Expert Consultation</button>
+                            <button class="btn btn-secondary" onclick="askFriends()">Ask My Friends</button>
+                            <button class="btn btn-secondary" onclick="uploadMedia()">Upload Media</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Network Page -->
+        <div id="network-page" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h2>My Network</h2>
+                </div>
+
+                <div class="network-tabs">
+                    <button class="tab-btn active" onclick="switchNetworkTab('friends')">Friends</button>
+                    <button class="tab-btn" onclick="switchNetworkTab('contractors')">Contractors</button>
+                    <button class="tab-btn" onclick="switchNetworkTab('invite')">Invite</button>
+                </div>
+
+                <div id="friends-tab" class="network-tab-content active">
+                    <div class="friends-header">
+                        <h3>My Friends</h3>
+                        <button class="btn btn-secondary" onclick="showAddFriendModal()">Add Friend</button>
+                    </div>
+                    <div id="friends-list" class="friends-list">
+                        <p class="no-data">No friends yet. <a href="#" onclick="showAddFriendModal()">Add your first friend</a></p>
+                    </div>
+                </div>
+
+                <div id="contractors-tab" class="network-tab-content">
+                    <div class="contractors-header">
+                        <h3>My Contractors</h3>
+                        <button class="btn btn-secondary" onclick="showAddContractorModal()">Add Contractor</button>
+                    </div>
+                    <div id="contractors-list" class="contractors-list">
+                        <p class="no-data">No contractors yet. <a href="#" onclick="showAddContractorModal()">Add your first contractor</a></p>
+                    </div>
+                </div>
+
+                <div id="invite-tab" class="network-tab-content">
+                    <div class="invite-content">
+                        <h3>Invite Friends</h3>
+                        <p>Share your referral link to earn points when friends join!</p>
+                        <div class="referral-link">
+                            <input type="text" id="referral-link" readonly value="https://hombiq.com/invite/abc123">
+                            <button class="btn btn-secondary" onclick="copyReferralLink()">Copy Link</button>
+                        </div>
+                        <div class="invite-options">
+                            <button class="btn btn-primary" onclick="shareViaEmail()">Share via Email</button>
+                            <button class="btn btn-primary" onclick="shareViaSMS()">Share via SMS</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Points Page -->
+        <div id="points-page" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h2>Points & Rewards</h2>
+                </div>
+
+                <div class="points-overview">
+                    <div class="points-card">
+                        <h3>Your Points</h3>
+                        <div class="points-balance-large" id="points-balance-large">0</div>
+                        <div class="points-progress-large">
+                            <div class="progress-bar-large">
+                                <div class="progress-fill-large" id="points-progress-large"></div>
+                            </div>
+                            <p>10 points = 1 free assessment ($29.99 value)</p>
+                        </div>
+                    </div>
+
+                    <div class="earn-points">
+                        <h3>Earn Points</h3>
+                        <div class="earn-options">
+                            <div class="earn-option">
+                                <span class="earn-icon">💬</span>
+                                <div class="earn-details">
+                                    <h4>Provide Feedback</h4>
+                                    <p>2 points per helpful response</p>
+                                </div>
+                            </div>
+                            <div class="earn-option">
+                                <span class="earn-icon">👥</span>
+                                <div class="earn-details">
+                                    <h4>Refer Friends</h4>
+                                    <p>10 points per successful referral</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="points-history">
+                    <h3>Points History</h3>
+                    <div id="points-history-list">
+                        <p class="no-data">No points earned yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile-page" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h2>My Profile</h2>
+                </div>
+
+                <div class="profile-content">
+                    <div class="profile-main">
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <div class="profile-avatar" id="profile-avatar">👤</div>
+                                <div class="profile-info">
+                                    <h3 id="profile-name">User Name</h3>
+                                    <p id="profile-email">user@example.com</p>
+                                    <p class="member-since">Member since <span id="member-since">December 2024</span></p>
+                                </div>
+                                <button class="btn btn-secondary" onclick="showEditProfileModal()">Edit Profile</button>
+                            </div>
+                        </div>
+
+                        <div class="profile-stats">
+                            <div class="stat-card">
+                                <h4>Assessments</h4>
+                                <div class="stat-number" id="stat-assessments">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Points Earned</h4>
+                                <div class="stat-number" id="stat-points">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Friends</h4>
+                                <div class="stat-number" id="stat-friends">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-sidebar">
+                        <div class="home-profile">
+                            <h3>Home Profile</h3>
+                            <div class="home-details">
+                                <p><strong>Type:</strong> <span id="home-type">Single Family</span></p>
+                                <p><strong>Age:</strong> <span id="home-age">15 years</span></p>
+                                <p><strong>Size:</strong> <span id="home-size">2,500 sq ft</span></p>
+                            </div>
+                            <button class="btn btn-secondary" onclick="showEditHomeModal()">Edit Home</button>
+                        </div>
+
+                        <div class="handiness-profile">
+                            <h3>Handiness Level</h3>
+                            <div class="handiness-details">
+                                <p><strong>Experience:</strong> <span id="handiness-level">Some experience</span></p>
+                                <p><strong>Preferred:</strong> <span id="handiness-preference">Mix of DIY and professional</span></p>
+                            </div>
+                            <button class="btn btn-secondary" onclick="showEditHandinessModal()">Edit Skills</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settings-page" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h2>Settings</h2>
+                </div>
+
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h3>Account</h3>
+                        <div class="setting-item">
+                            <label>Email</label>
+                            <input type="email" id="settings-email" value="user@example.com">
+                        </div>
+                        <div class="setting-item">
+                            <label>Phone</label>
+                            <input type="tel" id="settings-phone" value="+1 (555) 123-4567">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Notifications</h3>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="notify-email" checked>
+                                Email notifications
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="notify-sms" checked>
+                                SMS notifications
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Privacy</h3>
+                        <div class="setting-item">
+                            <label>Default Assessment Privacy</label>
+                            <select id="default-privacy">
+                                <option value="private">Private</option>
+                                <option value="friends">Friends Only</option>
+                                <option value="public">Public</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button class="btn btn-primary" onclick="saveSettings()">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Sign In</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                </form>
+                <p class="modal-footer">
+                    Don't have an account? <a href="#" onclick="showSignupModal()">Sign up</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signup-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Sign Up</h3>
+                <button class="modal-close" onclick="closeModal('signup-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="signup-form" onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </form>
+                <p class="modal-footer">
+                    Already have an account? <a href="#" onclick="showLoginModal()">Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Friend Modal -->
+    <div id="add-friend-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Friend</h3>
+                <button class="modal-close" onclick="closeModal('add-friend-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-friend-form" onsubmit="handleAddFriend(event)">
+                    <div class="form-group">
+                        <label for="friend-email">Friend's Email</label>
+                        <input type="email" id="friend-email" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Invite</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Contractor Modal -->
+    <div id="add-contractor-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Contractor</h3>
+                <button class="modal-close" onclick="closeModal('add-contractor-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-contractor-form" onsubmit="handleAddContractor(event)">
+                    <div class="form-group">
+                        <label for="contractor-name">Name</label>
+                        <input type="text" id="contractor-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contractor-type">Type</label>
+                        <select id="contractor-type" required>
+                            <option value="">Select type</option>
+                            <option value="plumber">Plumber</option>
+                            <option value="electrician">Electrician</option>
+                            <option value="hvac">HVAC</option>
+                            <option value="general">General Contractor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="contractor-contact">Contact</label>
+                        <input type="text" id="contractor-contact" placeholder="Phone or email">
+                    </div>
+                    <div class="form-group">
+                        <label for="contractor-notes">Notes</label>
+                        <textarea id="contractor-notes" placeholder="Any additional notes..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Contractor</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Topic Modal -->
+    <div id="new-topic-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>New Topic</h3>
+                <button class="modal-close" onclick="closeModal('new-topic-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="new-topic-form" onsubmit="handleNewTopic(event)">
+                    <div class="form-group">
+                        <label for="topic-title">Title</label>
+                        <input type="text" id="topic-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="topic-category">Category</label>
+                        <select id="topic-category" required>
+                            <option value="">Select category</option>
+                            <option value="plumbing">Plumbing</option>
+                            <option value="electrical">Electrical</option>
+                            <option value="hvac">HVAC</option>
+                            <option value="roofing">Roofing</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="topic-content">Content</label>
+                        <textarea id="topic-content" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="topic-privacy">Privacy</label>
+                        <select id="topic-privacy">
+                            <option value="public">Public</option>
+                            <option value="network">Network Only</option>
+                            <option value="private">Private</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Topic</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+        <!-- Edit Home Modal -->
+        <div id="edit-home-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Edit Home Profile</h3>
+                    <button class="close-btn" onclick="closeModal('edit-home-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="edit-home-type">Home Type</label>
+                        <select id="edit-home-type">
+                            <option value="single-family">Single Family House</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="condo">Condo</option>
+                            <option value="townhouse">Townhouse</option>
+                            <option value="mobile">Mobile Home</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-home-age">Home Age</label>
+                        <select id="edit-home-age">
+                            <option value="new">New construction (0-5 years)</option>
+                            <option value="recent">Recent (6-15 years)</option>
+                            <option value="established">Established (16-30 years)</option>
+                            <option value="older">Older (30+ years)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-home-size">Square Footage</label>
+                        <input type="number" id="edit-home-size" placeholder="e.g., 2500">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeModal('edit-home-modal')">Cancel</button>
+                    <button class="btn btn-primary" onclick="saveHomeProfile()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Handiness Modal -->
+        <div id="edit-handiness-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Edit Handiness Level</h3>
+                    <button class="close-btn" onclick="closeModal('edit-handiness-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="edit-handiness-level">Experience Level</label>
+                        <select id="edit-handiness-level">
+                            <option value="beginner">Beginner (I prefer to hire professionals)</option>
+                            <option value="some-experience">Some experience (I can handle basic repairs)</option>
+                            <option value="confident">Confident DIYer (I enjoy tackling most projects)</option>
+                            <option value="expert">Expert (I can handle complex renovations)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-handiness-preference">Preferred Approach</label>
+                        <select id="edit-handiness-preference">
+                            <option value="professional">Prefer to hire professionals</option>
+                            <option value="mix">Mix of DIY and professional</option>
+                            <option value="diy">Prefer to DIY when possible</option>
+                            <option value="expert-diy">Expert DIYer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-skills">Specific Skills (optional)</label>
+                        <textarea id="edit-skills" placeholder="e.g., Plumbing, Electrical, Carpentry, Painting..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeModal('edit-handiness-modal')">Cancel</button>
+                    <button class="btn btn-primary" onclick="saveHandinessProfile()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
