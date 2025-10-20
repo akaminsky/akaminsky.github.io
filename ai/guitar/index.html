@@ -13,35 +13,23 @@
     <div class="app">
         <!-- Header -->
         <header class="header">
-            <div class="header-content">
-                <div class="header-left">
-                    <span class="material-icons">music_note</span>
-                    <h1>Guitar Songbook</h1>
-                </div>
-                <div class="header-right">
-                    <button class="add-song-button" id="addSongButton">
-                        <span class="material-icons">add</span>
-                        Add Song
-                    </button>
-                    <button class="icon-button">
-                        <span class="material-icons">search</span>
-                    </button>
-                    <button class="icon-button">
-                        <span class="material-icons">more_horiz</span>
-                    </button>
-                </div>
+            <h1>
+                <span class="material-icons">music_note</span>
+                Guitar Songbook
+            </h1>
+            <div class="header-actions">
+                <span id="songCount" class="song-count">0 songs</span>
+                <button class="btn btn-primary" id="addSongButton">
+                    <span class="material-icons">add</span>
+                    Add Song
+                </button>
             </div>
         </header>
 
         <!-- Main Content -->
         <main class="main">
-            <div class="container">
-
-                <!-- Filters -->
-                <div class="section">
-                    <div class="section-header">
-                        <h2>Filter Songs</h2>
-                    </div>
+                    
+                    <!-- Filters integrated above list -->
                     <div class="filter-controls">
                         <div class="filter-group">
                             <label for="chordFilter">Chord</label>
@@ -50,9 +38,9 @@
                             </select>
                         </div>
                         <div class="filter-group">
-                            <label for="capoFilter">Capo Position</label>
+                            <label for="capoFilter">Capo</label>
                             <select id="capoFilter">
-                                <option value="">All Positions</option>
+                                <option value="">All</option>
                                 <option value="0">No Capo</option>
                                 <option value="1">1st Fret</option>
                                 <option value="2">2nd Fret</option>
@@ -63,65 +51,54 @@
                                 <option value="7">7th Fret</option>
                             </select>
                         </div>
-                        <div class="filter-group">
+                        <div class="filter-group filter-search">
                             <label for="searchFilter">Search</label>
-                            <input type="text" id="searchFilter" placeholder="Search by song or artist...">
+                            <input type="text" id="searchFilter" placeholder="Search songs or artists...">
                         </div>
-                        <button id="clearFilters" class="clear-button">
+                        <button id="clearFilters" class="clear-button" title="Clear all filters">
                             <span class="material-icons">clear</span>
                             Clear
                         </button>
                     </div>
-                </div>
-
-                <!-- Songs List -->
-                <div class="section">
-                    <div class="section-header">
-                        <h2>My Songs</h2>
-                        <div class="song-count">
-                            <span id="songCount">0 songs</span>
-                        </div>
-                    </div>
-                    
-                    <div class="table-container">
-                        <table class="songs-table" id="songsTable">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th class="sortable" data-sort="title">
-                                        Song
-                                        <span class="sort-icon material-icons">unfold_more</span>
-                                    </th>
-                                    <th class="sortable" data-sort="artist">
-                                        Artist
-                                        <span class="sort-icon material-icons">unfold_more</span>
-                                    </th>
-                                    <th class="sortable" data-sort="chords">
-                                        Chords
-                                        <span class="sort-icon material-icons">unfold_more</span>
-                                    </th>
-                                    <th class="sortable" data-sort="capo">
-                                        Capo
-                                        <span class="sort-icon material-icons">unfold_more</span>
-                                    </th>
-                                    <th>Spotify</th>
-                                    <th>Tabs</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="songsList">
-                                <!-- Songs will be dynamically added here -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="empty-state" id="emptyState">
-                        <div class="empty-content">
-                            <span class="material-icons">music_note</span>
-                            <h3>No songs yet</h3>
-                            <p>Add your first song above to start building your guitar songbook!</p>
-                        </div>
-                    </div>
+            
+            <div class="table-container">
+                <table class="songs-table" id="songsTable">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="title">
+                                Song
+                                <span class="sort-icon material-icons">unfold_more</span>
+                            </th>
+                            <th class="sortable" data-sort="artist">
+                                Artist
+                                <span class="sort-icon material-icons">unfold_more</span>
+                            </th>
+                            <th class="sortable" data-sort="chords">
+                                Chords
+                                <span class="sort-icon material-icons">unfold_more</span>
+                            </th>
+                            <th class="sortable" data-sort="capo">
+                                Capo
+                                <span class="sort-icon material-icons">unfold_more</span>
+                            </th>
+                            <th class="sortable" data-sort="dateAdded">
+                                Date Learned
+                                <span class="sort-icon material-icons">unfold_more</span>
+                            </th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="songsList">
+                        <!-- Songs will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="empty-state" id="emptyState">
+                <div class="empty-content">
+                    <span class="material-icons">music_note</span>
+                    <h3>No songs yet</h3>
+                    <p>Click "Add Song" to start building your songbook!</p>
                 </div>
             </div>
         </main>
@@ -155,48 +132,73 @@
 
                 <!-- Song Form -->
                 <form id="songForm" class="song-form">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="songTitle">Song Title</label>
-                            <input type="text" id="songTitle" required placeholder="Enter song title">
+                    <div class="form-section">
+                        <h3 class="form-section-title">Song Details</h3>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="songTitle">Song Title *</label>
+                                <input type="text" id="songTitle" required placeholder="Enter song title">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="artist">Artist *</label>
+                                <input type="text" id="artist" required placeholder="Enter artist name">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="artist">Artist</label>
-                            <input type="text" id="artist" required placeholder="Enter artist name">
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">Guitar Info</h3>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="chords">Chords</label>
+                                <input type="text" id="chords" placeholder="Am, F, C, G (separate with commas)">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="capoPosition">Capo Position</label>
+                                <select id="capoPosition">
+                                    <option value="0">No Capo</option>
+                                    <option value="1">1st Fret</option>
+                                    <option value="2">2nd Fret</option>
+                                    <option value="3">3rd Fret</option>
+                                    <option value="4">4th Fret</option>
+                                    <option value="5">5th Fret</option>
+                                    <option value="6">6th Fret</option>
+                                    <option value="7">7th Fret</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="spotifyUrl">Spotify URL</label>
-                            <input type="url" id="spotifyUrl" placeholder="https://open.spotify.com/track/...">
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">Links & Resources</h3>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="spotifyUrl">Spotify URL</label>
+                                <input type="url" id="spotifyUrl" placeholder="https://open.spotify.com/track/...">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="tabUrl">
+                                    Ultimate Guitar Tab
+                                    <button type="button" class="search-tabs-btn" id="searchTabsBtn" title="Search for tabs">
+                                        <span class="material-icons">search</span>
+                                    </button>
+                                </label>
+                                <input type="url" id="tabUrl" placeholder="https://tabs.ultimate-guitar.com/tab/...">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="tabUrl">
-                                Ultimate Guitar Tab
-                                <button type="button" class="search-tabs-btn" id="searchTabsBtn" title="Search for tabs">
-                                    <span class="material-icons">search</span>
-                                </button>
-                            </label>
-                            <input type="url" id="tabUrl" placeholder="https://tabs.ultimate-guitar.com/tab/...">
-                        </div>
-                        <div class="form-group">
-                            <label for="capoPosition">Capo Position</label>
-                            <select id="capoPosition">
-                                <option value="0">No Capo</option>
-                                <option value="1">1st Fret</option>
-                                <option value="2">2nd Fret</option>
-                                <option value="3">3rd Fret</option>
-                                <option value="4">4th Fret</option>
-                                <option value="5">5th Fret</option>
-                                <option value="6">6th Fret</option>
-                                <option value="7">7th Fret</option>
-                            </select>
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="chords">Guitar Chords</label>
-                            <input type="text" id="chords" placeholder="Am, F, C, G (separate with commas)">
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="notes">Notes</label>
-                            <textarea id="notes" placeholder="Any additional notes about the song..." rows="3"></textarea>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">Additional Info</h3>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="dateAdded">Date Learned *</label>
+                                <input type="date" id="dateAdded" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="notes">Notes</label>
+                                <textarea id="notes" placeholder="Any additional notes about the song..." rows="3"></textarea>
+                            </div>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -225,8 +227,10 @@
                     <span class="material-icons">close</span>
                 </button>
             </div>
-            <div id="spotifyPlayer">
-                <p>Loading Spotify player...</p>
+            <div class="modal-body">
+                <div id="spotifyPlayer">
+                    <p>Loading Spotify player...</p>
+                </div>
             </div>
         </div>
     </div>

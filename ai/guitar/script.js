@@ -32,6 +32,7 @@ class GuitarSongbook {
         this.tabUrl = document.getElementById('tabUrl');
         this.searchTabsBtn = document.getElementById('searchTabsBtn');
         this.capoPosition = document.getElementById('capoPosition');
+        this.dateAdded = document.getElementById('dateAdded');
         this.chords = document.getElementById('chords');
         this.notes = document.getElementById('notes');
 
@@ -119,8 +120,10 @@ class GuitarSongbook {
             spotifyUrl: this.spotifyUrl.value.trim(),
             tabUrl: this.tabUrl.value.trim(),
             capoPosition: parseInt(this.capoPosition.value),
+            dateAdded: this.dateAdded.value,
             chords: this.parseChords(this.chords.value.trim()),
             notes: this.notes.value.trim(),
+            albumCover: this.tempAlbumCover || null,
             createdAt: new Date().toISOString()
         };
 
@@ -180,6 +183,7 @@ class GuitarSongbook {
             this.spotifyUrl.value = song.spotifyUrl || '';
             this.tabUrl.value = song.tabUrl || '';
             this.capoPosition.value = song.capoPosition;
+            this.dateAdded.value = song.dateAdded || new Date().toISOString().split('T')[0];
             this.chords.value = song.chords.join(', ');
             this.notes.value = song.notes || '';
             this.editingId = id;
@@ -193,19 +197,34 @@ class GuitarSongbook {
         this.songForm.reset();
         this.editingId = null;
         this.capoPosition.value = '0';
+        this.tempAlbumCover = null;
+        // Set today's date as default
+        const today = new Date().toISOString().split('T')[0];
+        this.dateAdded.value = today;
     }
 
     // Side Panel Methods
     openSidePanel() {
-        this.addSongPanel.classList.add('open');
-        this.sidePanelOverlay.classList.add('open');
+        this.addSongPanel.classList.add('active');
+        if (this.sidePanelOverlay) {
+            this.sidePanelOverlay.classList.add('active');
+        }
         document.body.style.overflow = 'hidden';
+        
+        // Set today's date if adding a new song (not editing)
+        if (!this.editingId) {
+            const today = new Date().toISOString().split('T')[0];
+            this.dateAdded.value = today;
+        }
+        
         this.songTitle.focus();
     }
 
     closeSidePanel() {
-        this.addSongPanel.classList.remove('open');
-        this.sidePanelOverlay.classList.remove('open');
+        this.addSongPanel.classList.remove('active');
+        if (this.sidePanelOverlay) {
+            this.sidePanelOverlay.classList.remove('active');
+        }
         document.body.style.overflow = '';
         this.resetForm();
     }
@@ -401,39 +420,36 @@ class GuitarSongbook {
 
     createSongHTML(song) {
         const capoBadge = song.capoPosition === 0 ? 'No Capo' : `<span class="capo-badge">${song.capoPosition}</span>`;
-        const spotifyIndicator = song.spotifyUrl ? '<span class="material-icons spotify-indicator">music_note</span>' : '';
-        const tabsIndicator = song.tabUrl ? `<a href="${song.tabUrl}" target="_blank" rel="noopener noreferrer" title="View tabs on Ultimate Guitar"><span class="material-icons tabs-link">library_music</span></a>` : '';
         const hasChords = song.chords && song.chords.length > 0;
         
         return `
             <tr class="song-row" data-id="${song.id}">
-                <td class="expand-cell">
-                    ${hasChords ? `
-                        <button class="expand-btn" title="Show chord diagrams">
-                            <span class="material-icons">keyboard_arrow_right</span>
-                        </button>
-                    ` : ''}
-                </td>
                 <td class="song-cell">
-                    <div class="song-title">${this.escapeHtml(song.title)}</div>
-                    ${song.notes ? `
-                        <div class="notes-text" data-notes="${this.escapeHtml(song.notes)}" title="${this.escapeHtml(song.notes)}">
-                            <span class="material-icons">sticky_note_2</span>
-                            ${this.escapeHtml(song.notes.length > 30 ? song.notes.substring(0, 30) + '...' : song.notes)}
+                    <div class="song-info">
+                        ${song.albumCover ? `
+                            <img src="${song.albumCover}" alt="Album cover" class="album-cover-thumb">
+                        ` : ''}
+                        <div class="song-text">
+                            <div class="song-title">${this.escapeHtml(song.title)}</div>
+                            ${song.notes ? `
+                                <div class="notes-text" data-notes="${this.escapeHtml(song.notes)}" title="${this.escapeHtml(song.notes)}">
+                                    <span class="material-icons">sticky_note_2</span>
+                                    ${this.escapeHtml(song.notes.length > 30 ? song.notes.substring(0, 30) + '...' : song.notes)}
+                                </div>
+                            ` : ''}
                         </div>
-                    ` : ''}
+                    </div>
                 </td>
                 <td class="artist-cell">${this.escapeHtml(song.artist)}</td>
                 <td class="chords-cell">
                     ${hasChords ? `
-                        <div class="chords-list">
+                        <div class="chords-list clickable-chords" title="Click to view chord diagrams">
                             ${song.chords.map(chord => `<span class="chord-badge">${this.escapeHtml(chord)}</span>`).join('')}
                         </div>
                     ` : '-'}
                 </td>
                 <td class="capo-cell">${capoBadge}</td>
-                <td class="spotify-cell">${spotifyIndicator}</td>
-                <td class="tabs-cell">${tabsIndicator}</td>
+                <td class="date-cell">${song.dateAdded ? this.formatDate(song.dateAdded) : '-'}</td>
                 <td class="actions-cell">
                     <div class="song-actions">
                         ${song.spotifyUrl ? `
@@ -441,20 +457,38 @@ class GuitarSongbook {
                                 <span class="material-icons">play_arrow</span>
                             </button>
                         ` : ''}
-                        <button class="action-btn edit-btn" title="Edit Song">
+                        <button class="action-btn edit-btn" title="Edit">
                             <span class="material-icons">edit</span>
                         </button>
-                        <button class="action-btn delete-btn" title="Delete Song">
+                        <button class="action-btn delete-btn" title="Delete">
                             <span class="material-icons">delete</span>
                         </button>
                     </div>
                 </td>
             </tr>
             ${hasChords ? `
-                <tr class="chord-chart-row" data-id="${song.id}" style="display: none;">
-                    <td colspan="8">
-                        <div class="chord-chart-container">
-                            ${this.createChordCharts(song.chords)}
+                <tr class="details-row" data-id="${song.id}">
+                    <td colspan="6">
+                        <div class="details-content">
+                            <div class="chords-section">
+                                <div class="chord-diagrams-grid">
+                                    ${this.createChordCharts(song.chords)}
+                                </div>
+                            </div>
+                            ${song.notes ? `
+                                <div class="notes-section">
+                                    <h4>Notes</h4>
+                                    <p>${this.escapeHtml(song.notes)}</p>
+                                </div>
+                            ` : ''}
+                            ${song.tabUrl ? `
+                                <div class="links-section">
+                                    <a href="${song.tabUrl}" target="_blank" rel="noopener noreferrer" class="link-button btn-secondary">
+                                        <span class="material-icons">library_music</span>
+                                        View Tabs on Ultimate Guitar
+                                    </a>
+                                </div>
+                            ` : ''}
                         </div>
                     </td>
                 </tr>
@@ -463,24 +497,49 @@ class GuitarSongbook {
     }
 
     bindSongEvents() {
-        // Expand chord chart events
-        document.querySelectorAll('.expand-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+        // Click on chords to show/hide chord diagrams
+        document.querySelectorAll('.clickable-chords').forEach(chordsDiv => {
+            chordsDiv.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent row click
                 const songRow = e.target.closest('.song-row');
                 const songId = songRow.dataset.id;
-                const chordRow = document.querySelector(`.chord-chart-row[data-id="${songId}"]`);
-                const icon = btn.querySelector('.material-icons');
+                const detailsRow = songRow.nextElementSibling;
                 
-                if (chordRow.style.display === 'none') {
-                    chordRow.style.display = 'table-row';
-                    icon.textContent = 'keyboard_arrow_down';
-                    btn.title = 'Hide chord diagrams';
-                } else {
-                    chordRow.style.display = 'none';
-                    icon.textContent = 'keyboard_arrow_right';
-                    btn.title = 'Show chord diagrams';
+                if (detailsRow && detailsRow.classList.contains('details-row')) {
+                    // Toggle visibility
+                    detailsRow.classList.toggle('active');
+                    chordsDiv.classList.toggle('expanded');
                 }
             });
+            
+            // Add hover effect
+            chordsDiv.style.cursor = 'pointer';
+        });
+
+        // Click on details row to collapse
+        document.querySelectorAll('.details-row').forEach(row => {
+            row.addEventListener('click', (e) => {
+                // Don't close if clicking on links or interactive elements
+                if (e.target.tagName === 'A' || e.target.closest('a')) {
+                    return;
+                }
+                
+                // Close the details row
+                row.classList.remove('active');
+                
+                // Find and update the corresponding chords list
+                const songId = row.dataset.id;
+                const songRow = row.previousElementSibling;
+                if (songRow) {
+                    const chordsDiv = songRow.querySelector('.clickable-chords');
+                    if (chordsDiv) {
+                        chordsDiv.classList.remove('expanded');
+                    }
+                }
+            });
+            
+            // Add cursor pointer to indicate it's clickable
+            row.style.cursor = 'pointer';
         });
 
         // Play button events
@@ -527,6 +586,12 @@ class GuitarSongbook {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    formatDate(dateString) {
+        const date = new Date(dateString);
+        const options = { month: 'short', day: 'numeric', year: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
     }
 
     saveSongs() {
@@ -727,18 +792,14 @@ class GuitarSongbook {
 
         this.searchResults.innerHTML = tracks.map(track => `
             <div class="search-result-item" data-track-id="${track.id}">
-                <img src="${track.album.images[0]?.url || 'https://via.placeholder.com/50'}" alt="Album cover">
+                <img src="${track.album.images[2]?.url || track.album.images[0]?.url || 'https://via.placeholder.com/50'}" alt="Album cover" class="search-album-art">
                 <div class="search-result-info">
                     <div class="search-result-title">${this.escapeHtml(track.name)}</div>
                     <div class="search-result-artist">${this.escapeHtml(track.artists.map(artist => artist.name).join(', '))}</div>
-                    <div class="search-result-album">${this.escapeHtml(track.album.name)}</div>
                 </div>
-                <div class="search-result-actions">
-                    <button class="select-song-btn" data-track='${JSON.stringify(track)}'>
-                        <span class="material-icons">add</span>
-                        Select
-                    </button>
-                </div>
+                <button class="select-song-btn" data-track='${JSON.stringify(track)}'>
+                    <span class="material-icons">add</span>
+                </button>
             </div>
         `).join('');
 
@@ -757,6 +818,9 @@ class GuitarSongbook {
         this.songTitle.value = track.name;
         this.artist.value = track.artists.map(artist => artist.name).join(', ');
         this.spotifyUrl.value = track.external_urls.spotify;
+        
+        // Store album cover URL temporarily
+        this.tempAlbumCover = track.album.images[0]?.url || null;
         
         // Clear search results
         this.searchResults.innerHTML = '';
@@ -830,11 +894,7 @@ class GuitarSongbook {
 
     // Chord Chart Functions
     createChordCharts(chords) {
-        return `
-            <div class="chord-charts">
-                ${chords.map(chord => this.createChordDiagram(chord)).join('')}
-            </div>
-        `;
+        return chords.map(chord => this.createChordDiagram(chord)).join('');
     }
 
     createChordDiagram(chordName) {
