@@ -12,7 +12,7 @@ class GuitarSongbook {
         };
         this.editingId = null;
         this.spotifyAccessToken = null;
-        this.spotifyClientId = process.env.SPOTIFY_CLIENT_ID || 'your-spotify-client-id-here';
+        this.spotifyClientId = 'your-spotify-client-id-here'; // Add your Spotify Client ID for local development
         
         this.initializeElements();
         this.bindEvents();
@@ -550,7 +550,7 @@ class GuitarSongbook {
                 body: new URLSearchParams({
                     grant_type: 'client_credentials',
                     client_id: this.spotifyClientId,
-                    client_secret: process.env.SPOTIFY_CLIENT_SECRET || '' // Add your Spotify client secret here or use environment variable
+                    client_secret: '' // Add your Spotify client secret here for local development
                 })
             });
 

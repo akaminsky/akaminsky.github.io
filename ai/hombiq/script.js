@@ -23,8 +23,9 @@ class HombiqApp {
         this.currentFilter = 'all';
         this.currentCategory = 'all';
         
-        // OpenAI API Key - Use environment variable or fallback
-        this.openaiApiKey = process.env.OPENAI_API_KEY || 'your-openai-api-key-here';
+        // OpenAI API Key - Only needed for local development
+        // In production, the Netlify function handles the API key securely
+        this.openaiApiKey = ''; // Add your key here ONLY for local testing
         
         this.init();
     }
@@ -1463,28 +1464,40 @@ When you have enough information, provide a structured assessment with these fie
 
 **Safety First:** Always mention any safety concerns (electrical, gas, structural) and when to turn off utilities.`;
 
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        // Use Netlify function for production, direct API for local development
+        const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+        const apiUrl = isProduction ? '/.netlify/functions/openai' : 'https://api.openai.com/v1/chat/completions';
+        
+        const requestBody = {
+            model: 'gpt-3.5-turbo',
+            messages: [
+                {
+                    role: 'system',
+                    content: systemPrompt
+                },
+                ...conversationHistory
+            ],
+            max_tokens: 600,
+            temperature: 0.7
+        };
+
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+
+        // Only add Authorization header for local development (direct OpenAI calls)
+        if (!isProduction && this.openaiApiKey) {
+            headers['Authorization'] = `Bearer ${this.openaiApiKey}`;
+        }
+
+        const response = await fetch(apiUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.openaiApiKey}`
-            },
-            body: JSON.stringify({
-                model: 'gpt-3.5-turbo',
-                messages: [
-                    {
-                        role: 'system',
-                        content: systemPrompt
-                    },
-                    ...conversationHistory
-                ],
-                max_tokens: 600,
-                temperature: 0.7
-            })
+            headers: headers,
+            body: JSON.stringify(requestBody)
         });
 
         if (!response.ok) {
-            throw new Error('OpenAI API call failed');
+            throw new Error('API call failed');
         }
 
         const data = await response.json();
