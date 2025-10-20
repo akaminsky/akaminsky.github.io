@@ -25,7 +25,7 @@ class HombiqApp {
         
         // OpenAI API Key - Only needed for local development
         // In production, the Netlify function handles the API key securely
-        this.openaiApiKey = ''; // Add your key here ONLY for local testing
+        this.openaiApiKey = ''; // Add your key here ONLY for local testing - DO NOT commit with real key!
         
         this.init();
     }
@@ -1466,7 +1466,7 @@ When you have enough information, provide a structured assessment with these fie
 
         // Use Netlify function for production, direct API for local development
         const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-        const apiUrl = isProduction ? '/.netlify/functions/openai' : 'https://api.openai.com/v1/chat/completions';
+        const apiUrl = isProduction ? 'https://alexakaminsky.com/ai/hombiq/.netlify/functions/openai' : 'https://api.openai.com/v1/chat/completions';
         
         const requestBody = {
             model: 'gpt-3.5-turbo',
