@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://sdk.scdn.co/spotify-player.js"></script>
 </head>
 <body>
     <div class="app">
@@ -19,7 +18,7 @@
             </h1>
             <div class="header-actions">
                 <span id="songCount" class="song-count">0 songs</span>
-                <button class="btn btn-primary" id="addSongButton">
+                <button class="btn btn-primary" id="quickAddButton">
                     <span class="material-icons">add</span>
                     Add Song
                 </button>
@@ -28,6 +27,80 @@
 
         <!-- Main Content -->
         <main class="main">
+            
+            <!-- Quick Add Form (Hidden by default) -->
+            <div id="quickAddForm" class="quick-add-form">
+                <div class="quick-add-header">
+                    <h3>Quick Add Song</h3>
+                    <button class="close-quick-add" id="closeQuickAdd">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+                
+                <div class="quick-add-body">
+                    <!-- Spotify Search -->
+                    <div class="quick-search-container">
+                        <input type="text" id="quickSpotifySearch" placeholder="Search Spotify for a song..." class="quick-search-input">
+                        <button id="quickSearchBtn" class="quick-search-button">
+                            <span class="material-icons">search</span>
+                        </button>
+                    </div>
+                    
+                    <div id="quickSearchResults" class="quick-search-results"></div>
+                    
+                    <!-- Quick Form Fields (shown after selecting a song) -->
+                    <form id="quickSongForm" class="quick-song-form" style="display: none;">
+                        <div class="quick-form-fields">
+                            <div class="quick-selected-song">
+                                <img id="quickAlbumCover" src="" alt="Album cover" class="quick-album-cover">
+                                <div class="quick-song-info">
+                                    <div id="quickSongTitle" class="quick-song-title"></div>
+                                    <div id="quickArtist" class="quick-artist"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-input-group">
+                                <label for="quickChords">Chords *</label>
+                                <input type="text" id="quickChords" required placeholder="Am, F, C, G">
+                            </div>
+                            
+                            <div class="quick-input-row">
+                                <div class="quick-input-group">
+                                    <label for="quickCapo">Capo</label>
+                                    <select id="quickCapo">
+                                        <option value="0">No Capo</option>
+                                        <option value="1">1st</option>
+                                        <option value="2">2nd</option>
+                                        <option value="3">3rd</option>
+                                        <option value="4">4th</option>
+                                        <option value="5">5th</option>
+                                        <option value="6">6th</option>
+                                        <option value="7">7th</option>
+                                    </select>
+                                </div>
+                                <div class="quick-input-group">
+                                    <label for="quickDate">Date Added</label>
+                                    <input type="date" id="quickDate" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="quick-form-actions">
+                            <button type="button" class="btn-link" id="openFullFormBtn">
+                                <span class="material-icons">open_in_new</span>
+                                Advanced Edit
+                            </button>
+                            <div class="quick-action-buttons">
+                                <button type="button" class="btn btn-secondary" id="cancelQuickAdd">Cancel</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="material-icons">check</span>
+                                    Add Song
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
                     
                     <!-- Filters integrated above list -->
                     <div class="filter-controls">
@@ -82,7 +155,7 @@
                                 <span class="sort-icon material-icons">unfold_more</span>
                             </th>
                             <th class="sortable" data-sort="dateAdded">
-                                Date Learned
+                                Date Added
                                 <span class="sort-icon material-icons">unfold_more</span>
                             </th>
                             <th>Actions</th>
@@ -191,10 +264,10 @@
                     <div class="form-section">
                         <h3 class="form-section-title">Additional Info</h3>
                         <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label for="dateAdded">Date Learned *</label>
-                                <input type="date" id="dateAdded" required>
-                            </div>
+                        <div class="form-group full-width">
+                            <label for="dateAdded">Date Added *</label>
+                            <input type="date" id="dateAdded" required>
+                        </div>
                             <div class="form-group full-width">
                                 <label for="notes">Notes</label>
                                 <textarea id="notes" placeholder="Any additional notes about the song..." rows="3"></textarea>

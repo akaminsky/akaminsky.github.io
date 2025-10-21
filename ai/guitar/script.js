@@ -63,6 +63,22 @@ class GuitarSongbook {
         // Modal elements
         this.spotifyModal = document.getElementById('spotifyModal');
         this.spotifyPlayer = document.getElementById('spotifyPlayer');
+        
+        // Quick Add elements
+        this.quickAddButton = document.getElementById('quickAddButton');
+        this.quickAddForm = document.getElementById('quickAddForm');
+        this.closeQuickAdd = document.getElementById('closeQuickAdd');
+        this.quickSpotifySearch = document.getElementById('quickSpotifySearch');
+        this.quickSearchBtn = document.getElementById('quickSearchBtn');
+        this.quickSearchResults = document.getElementById('quickSearchResults');
+        this.quickSongForm = document.getElementById('quickSongForm');
+        this.quickChords = document.getElementById('quickChords');
+        this.quickCapo = document.getElementById('quickCapo');
+        this.quickDate = document.getElementById('quickDate');
+        this.cancelQuickAdd = document.getElementById('cancelQuickAdd');
+        this.quickAlbumCover = document.getElementById('quickAlbumCover');
+        this.quickSongTitle = document.getElementById('quickSongTitle');
+        this.quickArtist = document.getElementById('quickArtist');
     }
 
     bindEvents() {
@@ -70,10 +86,49 @@ class GuitarSongbook {
         this.songForm.addEventListener('submit', (e) => this.handleFormSubmit(e));
         
         // Side panel events
-        this.addSongButton.addEventListener('click', () => this.openSidePanel());
-        this.closePanelButton.addEventListener('click', () => this.closeSidePanel());
-        this.cancelButton.addEventListener('click', () => this.closeSidePanel());
-        this.sidePanelOverlay.addEventListener('click', () => this.closeSidePanel());
+        if (this.addSongButton) {
+            this.addSongButton.addEventListener('click', () => this.openSidePanel());
+        }
+        if (this.closePanelButton) {
+            this.closePanelButton.addEventListener('click', () => this.closeSidePanel());
+        }
+        if (this.cancelButton) {
+            this.cancelButton.addEventListener('click', () => this.closeSidePanel());
+        }
+        if (this.sidePanelOverlay) {
+            this.sidePanelOverlay.addEventListener('click', () => this.closeSidePanel());
+        }
+        
+        // Quick Add events
+        if (this.quickAddButton) {
+            this.quickAddButton.addEventListener('click', () => this.openQuickAdd());
+        }
+        if (this.closeQuickAdd) {
+            this.closeQuickAdd.addEventListener('click', () => this.closeQuickAddForm());
+        }
+        if (this.cancelQuickAdd) {
+            this.cancelQuickAdd.addEventListener('click', () => this.closeQuickAddForm());
+        }
+        if (this.quickSearchBtn) {
+            this.quickSearchBtn.addEventListener('click', () => this.quickSearchSpotify());
+        }
+        if (this.quickSpotifySearch) {
+            this.quickSpotifySearch.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.quickSearchSpotify();
+                }
+            });
+        }
+        if (this.quickSongForm) {
+            this.quickSongForm.addEventListener('submit', (e) => this.handleQuickFormSubmit(e));
+        }
+        
+        // Open full form from Quick Add
+        const openFullFormBtn = document.getElementById('openFullFormBtn');
+        if (openFullFormBtn) {
+            openFullFormBtn.addEventListener('click', () => this.openFullFormFromQuick());
+        }
         
         // Spotify search events
         this.searchBtn.addEventListener('click', () => this.searchSpotify());
@@ -962,6 +1017,190 @@ class GuitarSongbook {
                 </svg>
             </div>
         `;
+    }
+
+    // Quick Add Methods
+    openQuickAdd() {
+        this.quickAddForm.classList.add('active');
+        this.quickSongForm.style.display = 'none';
+        this.quickSearchResults.innerHTML = '';
+        this.quickSpotifySearch.value = '';
+        
+        // Set today's date by default
+        const today = new Date().toISOString().split('T')[0];
+        this.quickDate.value = today;
+        
+        setTimeout(() => {
+            this.quickSpotifySearch.focus();
+        }, 100);
+    }
+
+    closeQuickAddForm() {
+        this.quickAddForm.classList.remove('active');
+        this.quickSongForm.style.display = 'none';
+        this.quickSearchResults.innerHTML = '';
+        this.quickSpotifySearch.value = '';
+        this.quickChords.value = '';
+        this.quickSelectedTrack = null;
+    }
+
+    openFullFormFromQuick() {
+        // Transfer Quick Add data to full form if available
+        if (this.quickSelectedTrack) {
+            this.songTitle.value = this.quickSelectedTrack.name;
+            this.artist.value = this.quickSelectedTrack.artists.map(a => a.name).join(', ');
+            this.spotifyUrl.value = this.quickSelectedTrack.external_urls.spotify;
+            this.tempAlbumCover = this.quickSelectedTrack.album.images[1]?.url || this.quickSelectedTrack.album.images[0]?.url;
+            this.chords.value = this.quickChords.value;
+            this.capoPosition.value = this.quickCapo.value;
+            this.dateAdded.value = this.quickDate.value;
+        }
+        
+        // Close Quick Add and open full form
+        this.closeQuickAddForm();
+        this.openSidePanel();
+    }
+
+    async quickSearchSpotify() {
+        const query = this.quickSpotifySearch.value.trim();
+        if (!query) return;
+
+        // Show loading
+        this.quickSearchResults.innerHTML = '<div class="search-loading">Searching...</div>';
+
+        // Use the same search logic as the main form
+        if (this.spotifyAccessToken) {
+            try {
+                const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=10`, {
+                    headers: {
+                        'Authorization': `Bearer ${this.spotifyAccessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.tracks && data.tracks.items) {
+                        this.displayQuickSearchResults(data.tracks.items);
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.log('Spotify API error:', error);
+            }
+        }
+
+        // Fallback to demo data
+        this.displayQuickSearchResults(this.getDemoTracksForQuery(query));
+    }
+
+    getDemoTracksForQuery(query) {
+        // Return demo tracks (same as displayDemoSearchResults)
+        const demoTracks = [
+            {
+                id: 'demo1',
+                name: 'Wonderwall',
+                artists: [{ name: 'Oasis' }],
+                album: { name: '(What\'s the Story) Morning Glory?', images: [{ url: 'https://via.placeholder.com/50' }] },
+                external_urls: { spotify: 'https://open.spotify.com/track/2CT3r93YuSHtm57mjxvjhH' }
+            },
+            {
+                id: 'demo2',
+                name: 'Hotel California',
+                artists: [{ name: 'Eagles' }],
+                album: { name: 'Hotel California', images: [{ url: 'https://via.placeholder.com/50' }] },
+                external_urls: { spotify: 'https://open.spotify.com/track/40riOy7x9W7GXGyjoSdS8j' }
+            },
+            {
+                id: 'demo3',
+                name: 'Blackbird',
+                artists: [{ name: 'The Beatles' }],
+                album: { name: 'The Beatles (White Album)', images: [{ url: 'https://via.placeholder.com/50' }] },
+                external_urls: { spotify: 'https://open.spotify.com/track/5jgFfDIR6FR0gvlA56Nakr' }
+            }
+        ];
+        
+        // Return filtered results based on query
+        return demoTracks.filter(track => 
+            track.name.toLowerCase().includes(query.toLowerCase()) ||
+            track.artists[0].name.toLowerCase().includes(query.toLowerCase())
+        ).slice(0, 5);
+    }
+
+    displayQuickSearchResults(tracks) {
+        if (!tracks || tracks.length === 0) {
+            this.quickSearchResults.innerHTML = '<div class="search-error">No songs found</div>';
+            return;
+        }
+
+        this.quickSearchResults.innerHTML = tracks.slice(0, 5).map(track => `
+            <div class="search-result-item quick-result" data-track='${JSON.stringify(track)}'>
+                <img src="${track.album.images[2]?.url || track.album.images[0]?.url}" alt="Album" class="search-album-art">
+                <div class="search-result-info">
+                    <div class="search-result-title">${this.escapeHtml(track.name)}</div>
+                    <div class="search-result-artist">${this.escapeHtml(track.artists.map(a => a.name).join(', '))}</div>
+                </div>
+                <button class="select-song-btn">
+                    <span class="material-icons">add</span>
+                </button>
+            </div>
+        `).join('');
+
+        // Bind click events
+        document.querySelectorAll('.quick-result').forEach(item => {
+            item.addEventListener('click', () => {
+                const track = JSON.parse(item.dataset.track);
+                this.selectQuickSpotifyTrack(track);
+            });
+        });
+    }
+
+    selectQuickSpotifyTrack(track) {
+        // Store track data
+        this.quickSelectedTrack = track;
+        
+        // Show the quick form
+        this.quickSongForm.style.display = 'block';
+        this.quickSearchResults.innerHTML = '';
+        
+        // Populate song info
+        this.quickAlbumCover.src = track.album.images[1]?.url || track.album.images[0]?.url;
+        this.quickSongTitle.textContent = track.name;
+        this.quickArtist.textContent = track.artists.map(a => a.name).join(', ');
+        
+        // Set defaults
+        this.quickCapo.value = '0';
+        const today = new Date().toISOString().split('T')[0];
+        this.quickDate.value = today;
+        
+        // Focus on chords
+        setTimeout(() => {
+            this.quickChords.focus();
+        }, 100);
+    }
+
+    handleQuickFormSubmit(e) {
+        e.preventDefault();
+        
+        if (!this.quickSelectedTrack) return;
+        
+        const songData = {
+            id: Date.now().toString(),
+            title: this.quickSelectedTrack.name,
+            artist: this.quickSelectedTrack.artists.map(a => a.name).join(', '),
+            spotifyUrl: this.quickSelectedTrack.external_urls.spotify,
+            albumCover: this.quickSelectedTrack.album.images[1]?.url || this.quickSelectedTrack.album.images[0]?.url,
+            tabUrl: '',
+            capoPosition: parseInt(this.quickCapo.value),
+            dateAdded: this.quickDate.value,
+            chords: this.parseChords(this.quickChords.value.trim()),
+            notes: '',
+            createdAt: new Date().toISOString()
+        };
+
+        this.addSong(songData);
+        this.closeQuickAddForm();
+        this.showNotification('Song added successfully!', 'success');
     }
 }
 
