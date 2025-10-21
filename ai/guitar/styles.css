@@ -1024,12 +1024,14 @@ body {
 }
 
 .form-section-title {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     font-weight: 700;
-    color: var(--color-text-primary);
-    margin-bottom: var(--spacing-sm);
+    color: var(--color-black);
+    margin-bottom: var(--spacing-md);
     text-transform: uppercase;
-    letter-spacing: 0.75px;
+    letter-spacing: 1px;
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--color-primary-lighter);
 }
 
 .form-grid {
@@ -1126,6 +1128,10 @@ body {
         padding: var(--spacing-md);
     }
     
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
     .header-actions {
         width: 100%;
         justify-content: center;
@@ -1148,6 +1154,52 @@ body {
     
     .songs-table th,
     .songs-table td {
+        padding: var(--spacing-sm);
+    }
+    
+    /* Hide less important columns on mobile */
+    .songs-table th:nth-child(4),
+    .songs-table td:nth-child(4),
+    .songs-table th:nth-child(5),
+    .songs-table td:nth-child(5) {
+        display: none;
+    }
+    
+    /* Side Panel Full Width on Mobile */
+    .side-panel {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .side-panel.active {
+        right: 0;
+    }
+    
+    /* Modal on Mobile */
+    .modal {
+        padding: var(--spacing-md);
+    }
+    
+    .modal-content {
+        max-height: 95vh;
+    }
+    
+    .modal-header,
+    .modal-body {
+        padding: var(--spacing-md);
+    }
+    
+    /* Form sections on mobile */
+    .form-section {
+        margin-bottom: var(--spacing-md);
+        padding-bottom: var(--spacing-md);
+    }
+    
+    .chord-diagrams-grid {
+        gap: var(--spacing-md);
+    }
+    
+    .chord-diagram {
         padding: var(--spacing-sm);
     }
 }

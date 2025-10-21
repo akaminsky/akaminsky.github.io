@@ -217,7 +217,10 @@ class GuitarSongbook {
             this.dateAdded.value = today;
         }
         
-        this.songTitle.focus();
+        // Focus on Spotify search by default
+        setTimeout(() => {
+            this.spotifySearch.focus();
+        }, 100);
     }
 
     closeSidePanel() {
