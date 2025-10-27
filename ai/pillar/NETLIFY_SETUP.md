@@ -1,8 +1,8 @@
-# 🚀 Netlify Deployment Guide for Hombiq
+# 🚀 Netlify Deployment Guide for Pillar
 
 ## ✅ Setup Complete!
 
-Your Hombiq app is now configured to use Netlify Functions, which keeps your API key secure!
+Your Pillar app is now configured to use Netlify Functions, which keeps your API key secure!
 
 ## 📋 **What Was Set Up:**
 
@@ -27,7 +27,7 @@ git push
 1. Go to [netlify.com](https://netlify.com) and sign in
 2. Click "Add new site" → "Import an existing project"
 3. Choose "GitHub" and select your `akaminsky.github.io` repository
-4. **Important:** Set the base directory to `ai/hombiq`
+4. **Important:** Set the base directory to `ai/pillar`
 5. Click "Deploy site"
 
 ### **Step 3: Add Environment Variable**
@@ -42,7 +42,7 @@ git push
 
 ### **Step 4: Done!**
 
-Your Hombiq app will now be live at `your-site-name.netlify.app` with:
+Your Pillar app will now be live at `your-site-name.netlify.app` with:
 - ✅ Secure API key handling
 - ✅ Working AI chat
 - ✅ No exposed secrets
@@ -87,7 +87,7 @@ User → Frontend → OpenAI API directly
 - **Fix:** Add your API key to line 28 of `script.js` for local testing
 
 **Issue:** Netlify function not found
-- **Fix:** Make sure base directory is set to `ai/hombiq` in Netlify settings
+- **Fix:** Make sure base directory is set to `ai/pillar` in Netlify settings
 
 ---
 

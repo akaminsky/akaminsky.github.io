@@ -1,4 +1,4 @@
-# Hombiq Setup Instructions
+# Pillar Setup Instructions
 
 ## 🔐 API Key Setup
 

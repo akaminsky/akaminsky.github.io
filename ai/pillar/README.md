@@ -1,6 +1,6 @@
-# Hombiq MVP - Home Repair Triage App
+# Pillar MVP - Home Repair Triage App
 
-Hombiq helps homeowners understand what kind of home repair they need before hiring anyone. This MVP includes AI-powered issue triage, friend sharing, and professional matching features.
+Pillar helps homeowners understand what kind of home repair they need before hiring anyone. This MVP includes AI-powered issue triage, friend sharing, and professional matching features.
 
 ## 🚀 Features
 
@@ -8,7 +8,7 @@ Hombiq helps homeowners understand what kind of home repair they need before hir
 - **Personalized Recommendations**: Based on handiness level and home details
 - **Friend Sharing**: Get free advice from trusted contacts
 - **Professional Matching**: Find the right type of contractor
-- **Clean, Modern UI**: Notion-style design with Hombiq's color palette
+- **Clean, Modern UI**: Notion-style design with Pillar's color palette
 
 ## 🛠️ Setup Instructions
 
@@ -27,7 +27,7 @@ Hombiq helps homeowners understand what kind of home repair they need before hir
 4. Click **Save API Key**
 5. Click **Test Connection** to verify it's working
 
-### 3. Start Using Hombiq
+### 3. Start Using Pillar
 
 1. Go to **Get Help** to start a new triage
 2. Fill out the form with your home repair issue
@@ -122,7 +122,7 @@ The app tracks:
 
 ### File Structure
 ```
-hombiq/
+pillar/
 ├── index.html          # Main app structure
 ├── styles.css          # Complete styling
 ├── script.js           # JavaScript functionality
@@ -130,7 +130,7 @@ hombiq/
 ```
 
 ### Key Functions
-- `HombiqApp` class: Main application logic
+- `PillarApp` class: Main application logic
 - `callOpenAI()`: API integration
 - `displayScoutSummary()`: Results rendering
 - `setupSharePage()`: Friend sharing
@@ -161,4 +161,5 @@ For issues or questions:
   - Friend sharing
   - Professional matching
   - Settings management
+
 

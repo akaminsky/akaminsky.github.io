@@ -25,7 +25,7 @@ class PillarApp {
         
         // OpenAI API Key - Only needed for local development
         // In production, the Netlify function handles the API key securely
-        this.openaiApiKey = ''; // Add your key here ONLY for local testing - DO NOT commit with real key!
+        this.openaiApiKey = ''; // LOCAL TESTING ONLY - DO NOT commit with real key!
         
         this.init();
     }

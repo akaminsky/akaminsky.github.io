@@ -110,3 +110,4 @@ function findChord(chordName) {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { CHORD_LIBRARY, findChord };
 }
+

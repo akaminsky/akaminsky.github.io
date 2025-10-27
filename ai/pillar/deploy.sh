@@ -1,5 +1,5 @@
 #!/bin/bash
-# Deploy script for Hombiq - removes API key before pushing to GitHub
+# Deploy script for Pillar - removes API key before pushing to GitHub
 
 # Store the API key in a local file that won't be committed
 API_KEY_FILE=".api_key_backup"

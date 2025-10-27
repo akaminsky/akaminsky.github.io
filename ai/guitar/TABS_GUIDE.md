@@ -117,3 +117,4 @@ The app accepts any Ultimate Guitar URL, so you can link to:
 - **Both require**: Song title + artist filled in
 
 Perfect integration for keeping all your guitar resources in one place! 🎵
+
