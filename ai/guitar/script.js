@@ -848,25 +848,37 @@ class GuitarSongbook {
             return;
         }
 
-        this.searchResults.innerHTML = tracks.map(track => `
+        // Store tracks in a map for easy lookup by ID
+        if (!this.spotifyTracksCache) {
+            this.spotifyTracksCache = new Map();
+        }
+        
+        this.searchResults.innerHTML = tracks.map(track => {
+            // Cache track by ID for safe retrieval
+            this.spotifyTracksCache.set(track.id, track);
+            return `
             <div class="search-result-item" data-track-id="${track.id}">
                 <img src="${track.album.images[2]?.url || track.album.images[0]?.url || 'https://via.placeholder.com/50'}" alt="Album cover" class="search-album-art">
                 <div class="search-result-info">
                     <div class="search-result-title">${this.escapeHtml(track.name)}</div>
                     <div class="search-result-artist">${this.escapeHtml(track.artists.map(artist => artist.name).join(', '))}</div>
                 </div>
-                <button class="select-song-btn" data-track='${JSON.stringify(track)}'>
+                <button class="select-song-btn" data-track-id="${track.id}">
                     <span class="material-icons">add</span>
                 </button>
             </div>
-        `).join('');
+        `;
+        }).join('');
 
         // Bind select events
         document.querySelectorAll('.select-song-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const button = e.target.closest('.select-song-btn');
-                const track = JSON.parse(button.dataset.track);
-                this.selectSpotifyTrack(track);
+                const trackId = button.dataset.trackId;
+                const track = this.spotifyTracksCache.get(trackId);
+                if (track) {
+                    this.selectSpotifyTrack(track);
+                }
             });
         });
     }
@@ -1133,8 +1145,16 @@ class GuitarSongbook {
             return;
         }
 
-        this.quickSearchResults.innerHTML = tracks.slice(0, 5).map(track => `
-            <div class="search-result-item quick-result" data-track='${JSON.stringify(track)}'>
+        // Store tracks in cache for easy lookup by ID
+        if (!this.spotifyTracksCache) {
+            this.spotifyTracksCache = new Map();
+        }
+        
+        this.quickSearchResults.innerHTML = tracks.slice(0, 5).map(track => {
+            // Cache track by ID for safe retrieval
+            this.spotifyTracksCache.set(track.id, track);
+            return `
+            <div class="search-result-item quick-result" data-track-id="${track.id}">
                 <img src="${track.album.images[2]?.url || track.album.images[0]?.url}" alt="Album" class="search-album-art">
                 <div class="search-result-info">
                     <div class="search-result-title">${this.escapeHtml(track.name)}</div>
@@ -1144,13 +1164,17 @@ class GuitarSongbook {
                     <span class="material-icons">add</span>
                 </button>
             </div>
-        `).join('');
+        `;
+        }).join('');
 
         // Bind click events
         document.querySelectorAll('.quick-result').forEach(item => {
             item.addEventListener('click', () => {
-                const track = JSON.parse(item.dataset.track);
-                this.selectQuickSpotifyTrack(track);
+                const trackId = item.dataset.trackId;
+                const track = this.spotifyTracksCache.get(trackId);
+                if (track) {
+                    this.selectQuickSpotifyTrack(track);
+                }
             });
         });
     }
