@@ -12,6 +12,14 @@ A native iOS app for managing your guitar songbook with chord diagrams, a built-
 - Automatic date tracking
 - Album cover images from Spotify
 - Link and unlink Spotify songs anytime
+- Swipe actions for quick edit/delete/favorite
+
+### 📚 Chord Log
+- **View all chords you've learned** across all your songs
+- Visual chord diagrams for each chord
+- Search chords by name
+- See how many songs use each chord
+- Beautiful grid layout with stats
 
 ### 🎚️ Guitar Tuner
 - **Real-time pitch detection** using your device's microphone
@@ -21,12 +29,13 @@ A native iOS app for managing your guitar songbook with chord diagrams, a built-
 - Frequency display in Hz
 - Works completely offline
 
-### ⭐ Categories & Favorites
+### ⭐ Lists & Favorites
 - Mark songs as favorites with one tap from the song card
-- Create custom categories (Learning, Campfire, etc.)
-- Filter songs by category
-- Manage categories from the category manager
+- Create custom lists (Learning, Campfire, etc.)
+- Filter songs by list or favorites
+- Manage lists from Settings
 - Organize your songbook your way
+- Favorites cannot be deleted (built-in list)
 
 ### 🎸 Chord Diagrams
 - 50+ chord fingering diagrams built-in
@@ -34,6 +43,7 @@ A native iOS app for managing your guitar songbook with chord diagrams, a built-
 - Support for major, minor, 7th, maj7, m7, sus, power, dim, aug chords
 - Expandable accordion view per song
 - Open fret indicators (green circles)
+- Large, bold chord names for easy reading
 
 ### 🔗 Spotify Integration
 - Search Spotify's catalog for songs
@@ -41,6 +51,7 @@ A native iOS app for managing your guitar songbook with chord diagrams, a built-
 - Link/unlink songs to Spotify anytime
 - Open songs directly in Spotify app
 - Album cover art display
+- Dedicated Spotify search sheets
 - Demo mode when API not available
 
 ### 🎼 Tab Links
@@ -48,14 +59,23 @@ A native iOS app for managing your guitar songbook with chord diagrams, a built-
 - Supported sites: Ultimate Guitar, Songsterr, Chordify, E-Chords, Chordie, 911tabs
 - Quick search button opens Ultimate Guitar
 - One-tap to open saved tab links
+- Edit or remove tab links anytime
 
 ### 🔍 Filtering & Sorting
 - Filter by chord
 - Filter by capo position  
-- Filter by category or favorites
+- Filter by list or favorites
 - Text search for songs and artists
 - Sort by title, artist, chords, capo, or date added
-- Category pills for quick filtering
+- List pills for quick filtering
+
+### ⚙️ Settings
+- **Manage Lists** - Create, rename, and delete custom lists
+- **Stats** - View total songs, favorites, and unique chords
+- **iCloud Sync** - See sync status
+- **Send Feedback** - Link to feedback form
+- **Website** - Link to neverfret.app
+- **About** - Version info and credits
 
 ### ☁️ iCloud Sync
 - Automatic sync across iPhone, iPad, and Mac
@@ -68,6 +88,15 @@ A native iOS app for managing your guitar songbook with chord diagrams, a built-
 - VoiceOver support
 - Dynamic Type support
 - Clear visual hierarchy
+
+## Navigation
+
+The app uses a bottom tab bar with four main sections:
+
+1. **Songs** 🎵 - Your song library with filters and search
+2. **Chords** 🎸 - Chord log showing all learned chords
+3. **Tuner** 🎚️ - Guitar tuner with real-time pitch detection
+4. **Settings** ⚙️ - App settings, stats, and feedback
 
 ## Requirements
 
@@ -112,15 +141,18 @@ GuitarSongbook/
 │   ├── AudioPitchDetector.swift  # Real-time pitch detection for tuner
 │   └── TabURLDetector.swift      # Tab URL detection from clipboard
 ├── Views/
-│   ├── ContentView.swift         # Main app view with song cards
+│   ├── MainTabView.swift         # Tab bar navigation
+│   ├── ContentView.swift         # Songs tab - main app view
+│   ├── ChordLogView.swift        # Chords tab - chord library
+│   ├── TunerView.swift           # Tuner tab - guitar tuner
+│   ├── SettingsView.swift        # Settings tab - app settings
 │   ├── SongListView.swift        # Alternative list view
 │   ├── FilterControlsView.swift  # Search & filter UI
 │   ├── QuickAddView.swift        # Quick add form & color extensions
 │   ├── AddSongView.swift         # Full add/edit form with Spotify linking
 │   ├── SongDetailView.swift      # Song detail sheet
 │   ├── ChordDiagramView.swift    # Chord diagram rendering
-│   ├── TunerView.swift           # Guitar tuner UI
-│   └── CategoryManagerView.swift # Category management
+│   └── CategoryManagerView.swift # List management (renamed from Category)
 └── Assets.xcassets/              # App icons & colors
 ```
 
@@ -128,6 +160,7 @@ GuitarSongbook/
 
 The app uses:
 - **SwiftUI** for all UI components
+- **TabView** for bottom navigation
 - **@StateObject** and **@EnvironmentObject** for state management
 - **UserDefaults + NSUbiquitousKeyValueStore** for local + iCloud persistence
 - **AVAudioEngine** for real-time audio capture (tuner)
@@ -135,6 +168,7 @@ The app uses:
 - **async/await** for network calls
 - **Canvas** API for chord diagram rendering
 - **Custom Codable decoding** for data migration
+- **@MainActor** for thread-safe UI updates
 
 ## Color System
 
@@ -194,14 +228,17 @@ No data is collected or transmitted except:
 ## UI Features
 
 - Clean, modern iOS design inspired by Day One and Notion
+- Bottom tab bar navigation (Songs, Chords, Tuner, Settings)
 - Dark mode support
 - Context menus for quick actions (long press)
 - Expandable chord diagrams with accordion animation
 - Native iOS navigation patterns
 - Real-time guitar tuner with visual feedback
 - Floating action button for adding songs
-- Category pills for quick filtering
+- List pills for quick filtering
 - Swipe actions in list views
+- Keyboard dismissal on tap outside search fields
+- Searchable chord log
 
 ## App Store Preparation
 
@@ -219,6 +256,12 @@ To publish to the App Store:
 - Chord diagrams support common chords; exotic chords may show generic fingering
 - Spotify integration requires valid API credentials for full functionality
 - iCloud sync has slight delay between devices
+
+## Feedback & Support
+
+- **Feedback Form**: Available in Settings → Send Feedback
+- **Website**: [neverfret.app](https://neverfret.app)
+- **Built by**: [Alexa Kaminsky](https://alexakaminsky.com)
 
 ## License
 
