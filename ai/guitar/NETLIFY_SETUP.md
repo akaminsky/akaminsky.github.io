@@ -15,7 +15,7 @@ If you haven't already:
 1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
 2. Click "Create App"
 3. Fill in:
-   - **App name**: "Never Fret" (or any name)
+   - **App name**: "Fret Not" (or any name)
    - **App description**: "Guitar songbook app"
    - **Website**: Your website (optional)
    - **Redirect URI**: `https://your-netlify-site.netlify.app/callback` (we'll update this after Netlify setup)

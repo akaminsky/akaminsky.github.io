@@ -1,4 +1,4 @@
-# Never Fret 🎸
+# Fret Not 🎸
 
 *The songs you'll never forget.*
 
@@ -8,11 +8,14 @@ A native iOS app for managing your guitar songbook with chord diagrams, a built-
 
 ### 🎵 Song Management
 - Add, edit, and delete songs
-- Store song details: title, artist, chords, capo position, notes
+- Store song details: title, artist, chords (optional), capo position, notes
 - Automatic date tracking
 - Album cover images from Spotify
-- Link and unlink Spotify songs anytime
+- Link and unlink Spotify songs anytime (even after adding manually)
 - Swipe actions for quick edit/delete/favorite
+- **Bulk import from Spotify playlists** - Paste a playlist link to add all songs at once
+- Add songs manually or via Spotify search
+- Duplicate detection prevents adding the same song twice
 
 ### 📚 Chord Log
 - **View all chords you've learned** across all your songs
@@ -23,11 +26,13 @@ A native iOS app for managing your guitar songbook with chord diagrams, a built-
 
 ### 🎚️ Guitar Tuner
 - **Real-time pitch detection** using your device's microphone
+- **Improved accuracy** - Uses actual device sample rate for precise frequency detection
 - Visual tuning gauge (flat ← → sharp)
 - Color feedback: 🟢 green = in tune, 🟡 orange = close, 🔴 red = off
 - String selector for standard tuning (E-A-D-G-B-E)
-- Frequency display in Hz
+- Frequency display in Hz with smoothing for stable readings
 - Works completely offline
+- Bluetooth headset support
 
 ### ⭐ Lists & Favorites
 - Mark songs as favorites with one tap from the song card
@@ -46,13 +51,15 @@ A native iOS app for managing your guitar songbook with chord diagrams, a built-
 - Large, bold chord names for easy reading
 
 ### 🔗 Spotify Integration
-- Search Spotify's catalog for songs
+- Search Spotify's catalog for songs via secure Netlify backend
 - Auto-fill song details from Spotify
-- Link/unlink songs to Spotify anytime
+- Link/unlink songs to Spotify anytime (even when adding manually)
 - Open songs directly in Spotify app
 - Album cover art display
 - Dedicated Spotify search sheets
-- Demo mode when API not available
+- **Bulk playlist import** - Import entire Spotify playlists at once
+- Secure backend architecture - Credentials stored server-side, never in app
+- Demo mode fallback when API unavailable
 
 ### 🎼 Tab Links
 - Save links to guitar tabs from popular sites
@@ -62,19 +69,22 @@ A native iOS app for managing your guitar songbook with chord diagrams, a built-
 - Edit or remove tab links anytime
 
 ### 🔍 Filtering & Sorting
-- Filter by chord
+- Filter by chord (including "Has Chords" and "No Chords" options)
 - Filter by capo position  
 - Filter by list or favorites
 - Text search for songs and artists
 - Sort by title, artist, chords, capo, or date added
 - List pills for quick filtering
+- Instant filter updates with smooth animations
+- "No Chords" filter helps quickly find songs that need chords added
 
 ### ⚙️ Settings
 - **Manage Lists** - Create, rename, and delete custom lists
+- **Import Playlist** - Bulk import songs from Spotify playlists
 - **Stats** - View total songs, favorites, and unique chords
 - **iCloud Sync** - See sync status
 - **Send Feedback** - Link to feedback form
-- **Website** - Link to neverfret.app
+- **Website** - Link to fretnot.app
 - **About** - Version info and credits
 
 ### ☁️ iCloud Sync
@@ -147,12 +157,13 @@ GuitarSongbook/
 │   ├── TunerView.swift           # Tuner tab - guitar tuner
 │   ├── SettingsView.swift        # Settings tab - app settings
 │   ├── SongListView.swift        # Alternative list view
-│   ├── FilterControlsView.swift  # Search & filter UI
+│   ├── FilterControlsView.swift  # Search & filter UI with chord filters
 │   ├── QuickAddView.swift        # Quick add form & color extensions
 │   ├── AddSongView.swift         # Full add/edit form with Spotify linking
+│   ├── BulkImportView.swift      # Spotify playlist bulk import
 │   ├── SongDetailView.swift      # Song detail sheet
 │   ├── ChordDiagramView.swift    # Chord diagram rendering
-│   └── CategoryManagerView.swift # List management (renamed from Category)
+│   └── CategoryManagerView.swift # List management
 └── Assets.xcassets/              # App icons & colors
 ```
 
@@ -164,11 +175,13 @@ The app uses:
 - **@StateObject** and **@EnvironmentObject** for state management
 - **UserDefaults + NSUbiquitousKeyValueStore** for local + iCloud persistence
 - **AVAudioEngine** for real-time audio capture (tuner)
-- **Accelerate framework** for FFT pitch detection
+- **Accelerate framework** for FFT pitch detection with improved autocorrelation algorithm
 - **async/await** for network calls
 - **Canvas** API for chord diagram rendering
 - **Custom Codable decoding** for data migration
 - **@MainActor** for thread-safe UI updates
+- **Netlify Functions** for secure Spotify API integration
+- **Hann windowing** and **frequency smoothing** for accurate pitch detection
 
 ## Color System
 
@@ -195,16 +208,24 @@ The app includes automatic data migration for backwards compatibility:
   - `createdAt` → uses `dateAdded`
 - No user action required
 
-## Customization
+## Spotify Backend Setup
 
-### Spotify Credentials
-For production use, update the credentials in `SpotifyService.swift`:
-```swift
-private let clientId = "your_client_id"
-private let clientSecret = "your_client_secret"
-```
+The app uses a Netlify backend for secure Spotify API integration. See `NETLIFY_SETUP.md` for detailed setup instructions.
 
-Or remove real API calls and use demo mode only.
+### Quick Setup:
+
+1. Deploy Netlify functions from `netlify/functions/`
+2. Set environment variables in Netlify:
+   - `SPOTIFY_CLIENT_ID`
+   - `SPOTIFY_CLIENT_SECRET`
+3. Update `netlifyBaseURL` in `SpotifyService.swift` with your Netlify site URL
+
+The backend handles:
+- Spotify authentication (client credentials flow)
+- Song search
+- Playlist track fetching
+
+This keeps credentials secure (server-side only) and allows the app to work without embedding secrets.
 
 ### Adding New Chords
 Add new chord fingerings in `ChordLibrary.swift`:
@@ -242,26 +263,55 @@ No data is collected or transmitted except:
 
 ## App Store Preparation
 
-To publish to the App Store:
+See `APP_STORE_CHECKLIST.md` for a comprehensive submission checklist.
+
+Quick steps:
 1. Create an Apple Developer account ($99/year)
-2. Update bundle identifier to your own (currently `com.yourname.NeverFret`)
-3. Create an app icon (1024x1024)
+2. Bundle identifier: `com.akaminsky.neverfret`
+3. Create app icon (1024x1024) - current: `neverfreticon.png`
 4. Capture screenshots for required device sizes
-5. Write a privacy policy
-6. If using Spotify API with real credentials, document the integration
+5. Create privacy policy (required for iCloud/data sync)
+6. Set up Netlify backend for Spotify integration
 7. Archive and upload via Xcode
+
+The app uses:
+- iCloud sync (requires privacy policy)
+- Microphone access (tuner feature)
+- Spotify API via Netlify backend
+
+## Recent Updates
+
+### Latest Improvements
+- ✅ **Bulk playlist import** - Import entire Spotify playlists at once
+- ✅ **Improved tuner accuracy** - Fixed sample rate detection for precise pitch readings
+- ✅ **Manual song entry** - Add songs manually with optional chords field
+- ✅ **Smart chord filters** - "Has Chords" and "No Chords" filters for quick organization
+- ✅ **Spotify linking** - Link Spotify songs even when adding manually
+- ✅ **Netlify backend** - Secure server-side Spotify API integration
+- ✅ **Duplicate detection** - Prevents adding the same song twice
+- ✅ **Filter animations** - Smooth, instant filter updates
+- ✅ **Required fields** - Clear indicators (*) for required fields
+- ✅ **App renaming** - Updated from "Never Fret" to "Fret Not"
+
+### Technical Improvements
+- Fixed deprecation warnings (allowBluetooth → allowBluetoothHFP)
+- Improved pitch detection algorithm with normalization
+- Better error handling and logging
+- Thread-safe UI updates with @MainActor
+- Data migration for backwards compatibility
 
 ## Known Limitations
 
 - Chord diagrams support common chords; exotic chords may show generic fingering
-- Spotify integration requires valid API credentials for full functionality
+- Spotify integration requires Netlify backend setup for full functionality (see NETLIFY_SETUP.md)
 - iCloud sync has slight delay between devices
+- Tuner works best in quiet environments
 
 ## Feedback & Support
 
 - **Feedback Form**: Available in Settings → Send Feedback
-- **Website**: [neverfret.app](https://neverfret.app)
-- **Built by**: [Alexa Kaminsky](https://alexakaminsky.com)
+- **Website**: [fretnot.app](http://fretnot.app)
+- **Built by**: [Alexa Kaminsky](http://alexakaminsky.com)
 
 ## License
 
