@@ -19,6 +19,10 @@ A native iOS app for managing your guitar songbook with chord diagrams, a built-
 
 ### 📚 Chord Log
 - **View all chords you've learned** across all your songs
+- **Chord Identifier** - Tap the fretboard to identify any chord you're playing
+- Interactive fretboard interface (5 frets x 6 strings)
+- Tap strings to toggle open (O) or muted (×)
+- Instantly see matching chords with diagrams
 - Visual chord diagrams for each chord
 - Search chords by name
 - See how many songs use each chord
@@ -43,12 +47,23 @@ A native iOS app for managing your guitar songbook with chord diagrams, a built-
 - Favorites cannot be deleted (built-in list)
 
 ### 🎸 Chord Diagrams
-- 50+ chord fingering diagrams built-in
+- **200+ chord fingering diagrams built-in** - Comprehensive chord library!
 - Visual chord charts with finger positions
-- Support for major, minor, 7th, maj7, m7, sus, power, dim, aug chords
+- **All chord types supported:**
+  - Major, minor, 7th, maj7, m7 in all keys (including sharps/flats)
+  - Suspended chords (sus2, sus4)
+  - Power chords (5)
+  - 6th chords (6, m6)
+  - Add9 chords
+  - 9th chords (9, maj9, m9)
+  - Diminished (dim, dim7)
+  - Half-diminished (m7b5)
+  - Augmented (aug)
+  - Altered dominants (7#5, 7b5, 7#9, 7b9)
 - Expandable accordion view per song
 - Open fret indicators (green circles)
 - Large, bold chord names for easy reading
+- Barre chord indicators
 
 ### 🔗 Spotify Integration
 - Search Spotify's catalog for songs via secure Netlify backend
@@ -154,6 +169,7 @@ GuitarSongbook/
 │   ├── MainTabView.swift         # Tab bar navigation
 │   ├── ContentView.swift         # Songs tab - main app view
 │   ├── ChordLogView.swift        # Chords tab - chord library
+│   ├── ChordIdentifierView.swift # Interactive chord identifier
 │   ├── TunerView.swift           # Tuner tab - guitar tuner
 │   ├── SettingsView.swift        # Settings tab - app settings
 │   ├── SongListView.swift        # Alternative list view
@@ -228,7 +244,7 @@ The backend handles:
 This keeps credentials secure (server-side only) and allows the app to work without embedding secrets.
 
 ### Adding New Chords
-Add new chord fingerings in `ChordLibrary.swift`:
+The app includes 200+ chords covering virtually all common guitar chords. To add more chord fingerings, edit `ChordLibrary.swift`:
 ```swift
 "ChordName": ChordData(
     fingers: [E, A, D, G, B, e],  // -1 = mute, 0 = open, 1+ = fret
@@ -236,6 +252,14 @@ Add new chord fingerings in `ChordLibrary.swift`:
     barre: nil  // or fret number for barre chords
 )
 ```
+
+Supported chord types include:
+- Major, minor (all keys including sharps/flats)
+- 7th, maj7, m7 (all keys)
+- sus2, sus4, power chords (5)
+- 6th, add9, 9th, maj9, m9
+- dim, dim7, aug, m7b5
+- Altered dominants (7#5, 7b5, 7#9, 7b9)
 
 ## Privacy
 
@@ -282,6 +306,18 @@ The app uses:
 ## Recent Updates
 
 ### Latest Improvements
+- ✅ **Chord Identifier** - Interactive fretboard to identify chords you're playing!
+  - Tap the fretboard grid to place fingers on any fret (1-5)
+  - Tap string names to toggle open or muted
+  - Instantly see matching chords with visual diagrams
+  - Clear button to reset and try again
+- ✅ **Massive chord library expansion** - From 50+ to 200+ chords!
+  - All major and minor chords in every key (including C#, Db, Eb, F#, etc.)
+  - Complete 7th, maj7, and m7 variations across all keys
+  - Extended chords: 6th, add9, 9th, maj9, m9
+  - Jazz chords: dim7, m7b5 (half-diminished), altered dominants
+  - All suspended chords (sus2, sus4) for every key
+  - Comprehensive power chord collection
 - ✅ **Bulk playlist import** - Import entire Spotify playlists at once
 - ✅ **Improved tuner accuracy** - Fixed sample rate detection for precise pitch readings
 - ✅ **Manual song entry** - Add songs manually with optional chords field
@@ -302,7 +338,7 @@ The app uses:
 
 ## Known Limitations
 
-- Chord diagrams support common chords; exotic chords may show generic fingering
+- Chord identifier matches exact finger positions within first 5 frets
 - Spotify integration requires Netlify backend setup for full functionality (see NETLIFY_SETUP.md)
 - iCloud sync has slight delay between devices
 - Tuner works best in quiet environments

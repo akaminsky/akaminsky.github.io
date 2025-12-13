@@ -287,6 +287,13 @@ body {
     }
 }
 
+.screenshot-img {
+    width: 100%;
+    height: auto;
+    border-radius: 24px;
+    display: block;
+}
+
 .phone-screen {
     background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
     border-radius: 36px;
@@ -431,6 +438,18 @@ body {
 
 .screenshot-card {
     text-align: center;
+}
+
+.screenshot-card .screenshot-img {
+    margin-bottom: 32px;
+    transition: transform 0.4s ease;
+    border-radius: var(--radius-lg);
+    width: 100%;
+    height: auto;
+}
+
+.screenshot-card:hover .screenshot-img {
+    transform: scale(1.02);
 }
 
 .screenshot-placeholder {
