@@ -1,7 +1,6 @@
-// Netlify Function to get Spotify audio features for a track
+// Netlify Function to get audio features for a track using SoundNet Track Analysis API
 exports.handler = async function(event, context) {
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+  const rapidApiKey = process.env.RAPIDAPI_KEY;
 
   // Get trackId from URL parameters
   const trackId = event.queryStringParameters.trackId;
@@ -13,88 +12,54 @@ exports.handler = async function(event, context) {
     };
   }
 
-  if (!clientId || !clientSecret) {
+  if (!rapidApiKey) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Spotify credentials not configured' })
+      body: JSON.stringify({ error: 'RapidAPI key not configured' })
     };
   }
 
   try {
-    // First, get access token
-    const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64')
-      },
-      body: 'grant_type=client_credentials'
-    });
-
-    const tokenData = await tokenResponse.json();
-    const accessToken = tokenData.access_token;
-
-    // First, try the audio-features endpoint
-    let featuresResponse = await fetch(
-      `https://api.spotify.com/v1/audio-features/${trackId}`,
+    // Call SoundNet Track Analysis API with Spotify track ID
+    const soundNetResponse = await fetch(
+      `https://track-analysis.p.rapidapi.com/pktx/spotify/${trackId}`,
       {
+        method: 'GET',
         headers: {
-          'Authorization': `Bearer ${accessToken}`
+          'x-rapidapi-key': rapidApiKey,
+          'x-rapidapi-host': 'track-analysis.p.rapidapi.com'
         }
       }
     );
 
-    // If audio-features fails with 403, try the tracks endpoint with audio_features
-    if (featuresResponse.status === 403) {
-      console.log('Audio features endpoint returned 403, trying tracks endpoint...');
-
-      const trackResponse = await fetch(
-        `https://api.spotify.com/v1/tracks/${trackId}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          }
-        }
-      );
-
-      if (!trackResponse.ok) {
-        const errorBody = await trackResponse.text();
-        console.error('Tracks API error:', trackResponse.status, errorBody);
-        throw new Error(`Tracks API error: ${trackResponse.status}`);
-      }
-
-      const trackData = await trackResponse.json();
-
-      // Return demo data based on track info since we can't get real audio features
-      // This is better than complete failure
-      return {
-        statusCode: 200,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          key: 0,  // Default to C
-          mode: 1, // Default to major
-          tempo: 120,
-          time_signature: 4,
-          danceability: 0.5,
-          energy: 0.5,
-          valence: 0.5,
-          _fallback: true,
-          _note: 'Audio features endpoint requires user authorization for this Spotify app'
-        })
-      };
+    if (!soundNetResponse.ok) {
+      const errorBody = await soundNetResponse.text();
+      console.error('SoundNet API error:', soundNetResponse.status, errorBody);
+      throw new Error(`SoundNet API error: ${soundNetResponse.status}`);
     }
 
-    if (!featuresResponse.ok) {
-      const errorBody = await featuresResponse.text();
-      console.error('Spotify API error:', featuresResponse.status, errorBody);
-      throw new Error(`Spotify API error: ${featuresResponse.status}`);
-    }
+    const soundNetData = await soundNetResponse.json();
 
-    const featuresData = await featuresResponse.json();
+    // Convert SoundNet format to Spotify format
+    // SoundNet returns: key: "C", mode: "major"
+    // Spotify expects: key: 0 (0-11), mode: 1 (0=minor, 1=major)
+
+    const keyMap = {
+      'C': 0, 'C#': 1, 'Db': 1, 'D': 2, 'D#': 3, 'Eb': 3,
+      'E': 4, 'F': 5, 'F#': 6, 'Gb': 6, 'G': 7, 'G#': 8,
+      'Ab': 8, 'A': 9, 'A#': 10, 'Bb': 10, 'B': 11
+    };
+
+    const convertedData = {
+      key: keyMap[soundNetData.key] || 0,
+      mode: soundNetData.mode === 'major' ? 1 : 0,
+      tempo: soundNetData.tempo || 120,
+      time_signature: 4, // SoundNet doesn't provide this, default to 4/4
+      danceability: soundNetData.danceability / 100 || 0.5, // Convert 0-100 to 0-1
+      energy: soundNetData.energy / 100 || 0.5,
+      valence: soundNetData.happiness / 100 || 0.5, // SoundNet calls it "happiness"
+      _source: 'soundnet' // Mark that this came from SoundNet
+    };
 
     return {
       statusCode: 200,
@@ -103,9 +68,10 @@ exports.handler = async function(event, context) {
         'Access-Control-Allow-Headers': 'Content-Type',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(featuresData)
+      body: JSON.stringify(convertedData)
     };
   } catch (error) {
+    console.error('Error in audio features function:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message })
