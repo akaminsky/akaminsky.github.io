@@ -45,7 +45,10 @@ exports.handler = async function(event, context) {
     );
 
     if (!featuresResponse.ok) {
-      throw new Error(`Spotify API error: ${featuresResponse.status}`);
+      // Get detailed error message from Spotify
+      const errorBody = await featuresResponse.text();
+      console.error('Spotify API error:', featuresResponse.status, errorBody);
+      throw new Error(`Spotify API error: ${featuresResponse.status} - ${errorBody}`);
     }
 
     const featuresData = await featuresResponse.json();
