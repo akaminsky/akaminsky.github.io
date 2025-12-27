@@ -20,22 +20,8 @@ Once project is ready:
 1. Go to Project Settings > API
 2. Copy these values (you'll need them for Netlify):
    - **Project URL**: `https://xxxxx.supabase.co`
-
-
-https://ziospziyrodxdprafcsy.supabase.co
-
    - **anon/public key**: `eyJhbGc...` (long string starting with eyJ)
-
-
-
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inppb3Nweml5cm9keGRwcmFmY3N5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4NDExMjEsImV4cCI6MjA4MjQxNzEyMX0.QYs_bW8dAqM6hJVT4eYAOPDQLU--l-nuoQKuvNd_aVc
-
-
    - **service_role key**: `eyJhbGc...` (different long string - keep this secret!)
-
-
-
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inppb3Nweml5cm9keGRwcmFmY3N5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Njg0MTEyMSwiZXhwIjoyMDgyNDE3MTIxfQ.xKkcPw9UtAm-dQikbZHyZXyHavsrcq6Dz38VZWTS13o
 
 
 
