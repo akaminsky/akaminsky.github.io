@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Netlify
+.netlify/
+
+# Environment variables
+.env
+.env.local
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
