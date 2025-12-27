@@ -73,6 +73,35 @@ CREATE POLICY "Allow public reads"
   FOR SELECT
   TO anon
   USING (true);
+
+-- Analytics events table (anonymous usage tracking)
+CREATE TABLE usage_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_type TEXT NOT NULL,
+  event_metadata JSONB,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Create index for analytics queries
+CREATE INDEX idx_event_type ON usage_events(event_type);
+CREATE INDEX idx_events_created_at ON usage_events(created_at DESC);
+
+-- Enable Row Level Security
+ALTER TABLE usage_events ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Allow anonymous inserts
+CREATE POLICY "Allow anonymous event tracking"
+  ON usage_events
+  FOR INSERT
+  TO anon
+  WITH CHECK (true);
+
+-- Policy: Allow public reads (for analytics dashboard)
+CREATE POLICY "Allow public event reads"
+  ON usage_events
+  FOR SELECT
+  TO anon
+  USING (true);
 ```
 
 4. You should see "Success. No rows returned"
@@ -122,6 +151,51 @@ FROM song_contributions
 GROUP BY song_title, artist_name
 ORDER BY contribution_count DESC
 LIMIT 10;
+
+-- View analytics events
+SELECT COUNT(*) FROM usage_events;
+
+-- Events by type (last 7 days)
+SELECT
+  event_type,
+  COUNT(*) as event_count
+FROM usage_events
+WHERE created_at >= NOW() - INTERVAL '7 days'
+GROUP BY event_type
+ORDER BY event_count DESC;
+
+-- Song entry methods (manual vs Spotify)
+SELECT
+  event_metadata->>'source' as source,
+  COUNT(*) as count
+FROM usage_events
+WHERE event_type = 'song_added'
+GROUP BY source;
+
+-- Custom chord creation stats
+SELECT
+  COUNT(*) as total_custom_chords,
+  COUNT(DISTINCT DATE(created_at)) as days_with_activity
+FROM usage_events
+WHERE event_type = 'custom_chord_created';
+
+-- Strumming pattern usage
+SELECT COUNT(*) as total_patterns_added
+FROM usage_events
+WHERE event_type = 'strumming_pattern_added';
+
+-- Notes usage
+SELECT COUNT(*) as songs_with_notes
+FROM usage_events
+WHERE event_type = 'notes_added';
+
+-- Feature adoption (% of songs with each feature)
+SELECT
+  SUM(CASE WHEN event_type = 'song_added' THEN 1 ELSE 0 END) as total_songs,
+  SUM(CASE WHEN event_type = 'notes_added' THEN 1 ELSE 0 END) as songs_with_notes,
+  SUM(CASE WHEN event_type = 'strumming_pattern_added' THEN 1 ELSE 0 END) as songs_with_patterns,
+  SUM(CASE WHEN event_type = 'custom_chord_created' THEN 1 ELSE 0 END) as custom_chords_created
+FROM usage_events;
 ```
 
 
